@@ -4,14 +4,54 @@
 {% load static %}
 
 {% block site_head %}
+    <script src="http://malsup.github.io/jquery.form.js"></script>
     <link rel="stylesheet" href="{% static 'css/chatbox.css' %}">
 {% endblock site_head %}
 
 {% block content %}
         <!--<textarea id="chat-log" cols="100" rows="1"></textarea><br/>-->
         <div class="row h-100">
-            <div class="content col-md-6">
+            <div class="posts col-md-6">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="navbar-brand mr-auto" href="{% url 'index' %}">Gray Tale</a>
+                        </li>
+                        <span id="navbar-spacer" class="ml-2"></span>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{room_name}}
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{% url 'index' %}">graytale</a>
+                                <a class="dropdown-item" href="{% url 'index' %}pc-building/">pc-building</a>
+                                <a class="dropdown-item" href="{% url 'index' %}gaming/">gaming</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Create a post</a>
+                            </div>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav ml-auto">
+                        {% if user.is_authenticated %}
+                        <li class="nav-item my-auto">
+                            <span>Hi, {{ user }}!</span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="modal" data-target="#modal" href="{% url 'login' %}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Register</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                <div id="posts-window" class="posts-wrapper pre-scrollable">
 
+                </div>
             </div>
             <div class="col-md-6" id="chat-log">
                 <div id="chat-log-window" class="chat-log-wrapper pre-scrollable">
@@ -25,8 +65,13 @@
                     </div>
                 </div>
                 <div class="chat-input-wrapper">
+                    {% if user.is_authenticated %}
                     <input id="chat-message-input" type="text" size="2000"/>
                     <input class="col-md-1 btn btn-primary" id="chat-message-submit" type="button" value="Send"/>
+                    {% else %}
+                    <input id="chat-message-input" type="text" size="2000" value="Please log in to join the chat." disabled/>
+                    <input class="col-md-1 btn btn-primary" id="chat-message-submit" type="button" value="Send" disabled/>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -35,6 +80,16 @@
 
 {% block js %}
 <script>
+
+    $('#modal').on('show.bs.modal', function (event) {
+        var modal = $(this)
+        $.ajax({
+            url: "{% url 'login' %}",
+            context: document.body
+        }).done(function(response) {
+            modal.html(response);
+        });
+    })
 
     function scrollBottom() {
         var objDiv = document.getElementById("chat-log-window");
@@ -61,7 +116,7 @@
 
     var chatSocket = new WebSocket(
         'ws://' + window.location.host +
-        '/ws/chat/' + roomName + '/');
+        '/ws/' + roomName + '/');
 
     chatSocket.onmessage = function(e) {
         var data = JSON.parse(e.data);
