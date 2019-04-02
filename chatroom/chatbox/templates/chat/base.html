@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Gray Tale</title>
+
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    {% block site_head %}
+    {% endblock site_head %}
+</head>
+
+<body>
+    <div class="gt-body container-fluid">
+        {% block content %}
+        {% endblock content %}
+    </div>
+</body>
+
+{% block js %}
+{% endblock js %}

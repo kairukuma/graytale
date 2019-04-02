@@ -1,0 +1,63 @@
+html, body {
+    height: 100%;
+}
+
+.chat-line {
+    border: 1px solid rgba(120,120,120,0.66);
+    border-radius: 4px;
+    width: auto;
+
+    margin: 8px 0 8px 16px;
+    padding: 8px;
+}
+
+.gt-body {
+    height: 100%;
+}
+
+.chat-log-wrapper {
+    min-height: 90vh;
+    overflow-x: hidden !important;
+}
+
+.chat-input-wrapper {
+    padding: 1vh 2vw 0 2vw;
+    min-height: 10vh;
+}
+
+#chat-log-div {
+    min-height: 100%;
+}
+
+#chat-message-input {
+    position:relative;
+    top:0px;
+    height: 4vh;
+    width: 90%;
+}
+
+#chat-message-submit {
+    height: 5vh;
+    width: 10%;
+}
+
+/* Scrollbar */
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+  
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+}
