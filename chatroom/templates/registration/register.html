@@ -1,8 +1,8 @@
 <div class="modal-dialog" role="document">
-    <form action="{% url 'login' %}" method="post" id="login-form">
+    <form action="{% url 'register' %}" method="post" id="register-form">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Login</h2>
+                <h5 class="modal-title">Register</h2>
                 <button type="button" class="close" data-dismiss="modal" aria-label="close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -14,7 +14,7 @@
                         <div class="input-group mt-2 mb-2">
                             <div class="d-flex flex-column col-md-12">
                                 <label class="control-label">
-                                    {{field.name|title}}
+                                    {{field.label|title}}
                                 </label>
                                 <input class="form-control" id="{{ field.id_for_label }}" maxlength="32" name="{{ field.html_name }}" type="{{field.field.widget.input_type}}" /> 
                             </div>
@@ -22,7 +22,8 @@
                         </div>
                     {% endfor %}
                 </div>
-                <button type="submit" class="btn btn-primary btn-block mb-4" value="login">Login</button>
+    
+                <button type="submit" class="btn btn-primary btn-block mb-4" value="register">Register</button>
             </div>
         </div>
     </form>

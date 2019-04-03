@@ -24,10 +24,10 @@
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="{% url 'index' %}">graytale</a>
-                                <a class="dropdown-item" href="{% url 'index' %}pc-building/">pc-building</a>
-                                <a class="dropdown-item" href="{% url 'index' %}gaming/">gaming</a>
+                                <a class="dropdown-item" href="{% url 'index' %}g/pc-building/">pc-building</a>
+                                <a class="dropdown-item" href="{% url 'index' %}g/gaming/">gaming</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Create a post</a>
+                                <a class="dropdown-item" href="{% url 'create' %}">Create a post</a>
                             </div>
                         </li>
                     </ul>
@@ -44,13 +44,17 @@
                             <a class="nav-link" data-toggle="modal" data-target="#modal" href="{% url 'login' %}">Login</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Register</a>
+                            <a class="nav-link" data-toggle="modal" data-target="#modal" href="{% url 'register' %}">Register</a>
                         </li>
                         {% endif %}
                     </ul>
                 </nav>
                 <div id="posts-window" class="posts-wrapper pre-scrollable">
-
+                    {% for post in posts %}
+                        <div class="gt-post">
+                            <a href="{{post.url}}">{{post.title}}</a>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
             <div class="col-md-6" id="chat-log">
@@ -65,13 +69,14 @@
                     </div>
                 </div>
                 <div class="chat-input-wrapper">
-                    {% if user.is_authenticated %}
-                    <input id="chat-message-input" type="text" size="2000"/>
-                    <input class="col-md-1 btn btn-primary" id="chat-message-submit" type="button" value="Send"/>
-                    {% else %}
-                    <input id="chat-message-input" type="text" size="2000" value="Please log in to join the chat." disabled/>
-                    <input class="col-md-1 btn btn-primary" id="chat-message-submit" type="button" value="Send" disabled/>
-                    {% endif %}
+                    <div class="row">
+                        {% if user.is_authenticated %}
+                        <input id="chat-message-input" class="form-control col-md-12" type="text" placeholder="Press 'Enter' to send a message"/>
+                        <!--<input class="col-md-1 btn btn-primary col-md-3" id="chat-message-submit" type="button" value="Send"/>-->
+                        {% else %}
+                        <input id="chat-message-input" class="form-control col-md-12" type="text" size="2000" placeholder="Please log in to join the chat." disabled/>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
@@ -83,13 +88,30 @@
 
     $('#modal').on('show.bs.modal', function (event) {
         var modal = $(this)
+        var button = $(event.relatedTarget)
+        var url = button.attr('href');
         $.ajax({
-            url: "{% url 'login' %}",
+            url: url,
             context: document.body
         }).done(function(response) {
             modal.html(response);
         });
     })
+
+    function sendMessage() {
+        var messageInputDom = document.querySelector('#chat-message-input');
+        var message = messageInputDom.value;
+
+        if (message.trim().length == 0) {
+            return;
+        }
+
+        chatSocket.send(JSON.stringify({
+            'message': message
+        }));
+
+        messageInputDom.value = '';
+    }
 
     function scrollBottom() {
         var objDiv = document.getElementById("chat-log-window");
@@ -133,18 +155,12 @@
     document.querySelector('#chat-message-input').focus();
     document.querySelector('#chat-message-input').onkeyup = function(e) {
         if (e.keyCode === 13) {  // enter, return
-            document.querySelector('#chat-message-submit').click();
+            sendMessage();
         }
     };
 
-    document.querySelector('#chat-message-submit').onclick = function(e) {
-        var messageInputDom = document.querySelector('#chat-message-input');
-        var message = messageInputDom.value;
-        chatSocket.send(JSON.stringify({
-            'message': message
-        }));
-
-        messageInputDom.value = '';
-    };
+    /* document.querySelector('#chat-message-submit').onclick = function(e) {
+        sendMessage();
+    }; */
 </script>
 {% endblock js %}

@@ -16,9 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import include,url
 
+from chatbox.urls import account_urlpatterns
+
 urlpatterns = [
     url(r'',include('chatbox.urls')),
     # url(r'^g/',include('chatbox.urls')),
     url(r'^accounts/admin/', admin.site.urls),
     url(r'^accounts/', include('django.contrib.auth.urls')),
+    url(r'^accounts/', include(account_urlpatterns)),
 ]

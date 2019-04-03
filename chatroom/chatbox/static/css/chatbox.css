@@ -28,7 +28,7 @@ html, body {
 #chat-log-div {
     min-height: 100%;
 }
-
+/*
 #chat-message-input {
     position:relative;
     top:0px;
@@ -39,7 +39,7 @@ html, body {
 #chat-message-submit {
     height: 5vh;
     width: 10%;
-}
+}*/
 
 /* Scrollbar */
 /* width */

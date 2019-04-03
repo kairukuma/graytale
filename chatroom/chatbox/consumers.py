@@ -5,7 +5,9 @@ from channels.generic.websocket import WebsocketConsumer, AsyncWebsocketConsumer
 from .models import Message
 
 from datetime import datetime
+
 import json
+import time
 
 class ChatConsumer(AsyncWebsocketConsumer):
 
@@ -32,11 +34,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # Receive message from WebSocket
     async def receive(self, text_data):
 
-        if len(self.user.username) == 0:
-            return
-
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
+
+        if len(self.user.username) == 0 or len(message.strip()) == 0:
+            return
 
         dt = datetime.now()
 
@@ -44,7 +46,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             message_text=message,
             room_name=self.room_name,
             username=self.user.username,
-            year=dt.year,month=dt.month,day=dt.day,hour=dt.hour,minute=dt.minute,second=dt.second
+            datetime=time.mktime(dt.timetuple()),
         )
         m.save()
 

@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 from datetime import datetime
+import time
 
 # Create your models here.
 class Message(models.Model):
@@ -13,17 +14,22 @@ class Message(models.Model):
     message_text = models.CharField(max_length=1000)
     room_name = models.CharField(max_length=200,default='lobby')
 
-    year = models.IntegerField(default=dt.year)
-    month = models.IntegerField(default=dt.month)
-    day = models.IntegerField(default=dt.day)
-    hour = models.IntegerField(default=dt.hour)
-    minute = models.IntegerField(default=dt.minute)
-    second = models.IntegerField(default=dt.second)
+    datetime = models.IntegerField(default=time.mktime(dt.timetuple()))
 
     def __str__(self):
         return self.message_text
 
 class Post(models.Model):
 
+    dt = datetime.now()
+
     username = models.CharField(max_length=32,default='user')
+    topic = models.CharField(max_length=32, default='graytale')
     url = models.URLField(max_length=250)
+    text = models.TextField(blank=True,max_length=10000)
+    title = models.CharField(max_length=64, default='')
+
+    datetime = models.IntegerField(default=time.mktime(dt.timetuple()))
+
+    def __str__(self):
+        return self.title
