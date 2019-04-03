@@ -20,6 +20,10 @@ html, body {
     height: 70vh !important;
 }
 
+.posts-wrapper {
+    max-height: 70vh !important;
+}
+
 .chat-log-wrapper {
     min-height: 90vh;
     overflow-x: hidden !important;

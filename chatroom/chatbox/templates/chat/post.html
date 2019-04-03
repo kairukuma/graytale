@@ -49,8 +49,8 @@
                         {% endif %}
                     </ul>
                 </nav>
-                <div id="posts-window" class="row posts-wrapper">
-                    <div class="col-md-12 px-4 pt-4 posts-header">
+                <div id="posts-window" class="row post-wrapper">
+                    <div class="col-md-12 px-4 pt-4 post-header">
                         <h5><a href="{{post.url}}">{{post.title}}</a></h5>
                         <p>Submitted by {{post.username}}</p>
                     </div>
@@ -109,7 +109,8 @@
         }
 
         chatSocket.send(JSON.stringify({
-            'message': message
+            'message': message,
+            'username': '{{user}}',
         }));
 
         messageInputDom.value = '';
@@ -129,7 +130,7 @@
             class: 'msg-text'
         }).appendTo(chatline_div);
 
-        chatline_txt.text(username, ': ' + m);
+        chatline_txt.text(username + ': ' + m);
 
         scrollBottom();
     }
