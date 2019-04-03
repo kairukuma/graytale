@@ -60,6 +60,10 @@ def post_view(request, room_name='graytale', post_id='0'):
     })
 
 def create(request):
+
+    if request.user.id is None:
+        return
+
     if request.method == 'POST':
         form = Create(request.POST)
 

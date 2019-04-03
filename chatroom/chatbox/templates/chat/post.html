@@ -120,7 +120,7 @@
         objDiv.scrollTop = objDiv.scrollHeight;
     }
 
-    function createChatLine(m) {
+    function createChatLine(m,username) {
         var chatline_div = $('<div/>', {
             class : 'chat-line col-md-12',
         }).appendTo($('#chat-log-div'));
@@ -129,7 +129,7 @@
             class: 'msg-text'
         }).appendTo(chatline_div);
 
-        chatline_txt.text('{{user}}: ' + m);
+        chatline_txt.text(username, ': ' + m);
 
         scrollBottom();
     }
@@ -145,9 +145,10 @@
     chatSocket.onmessage = function(e) {
         var data = JSON.parse(e.data);
         var message = data['message'];
+        var username = data['username'];
         // document.querySelector('#chat-log').value += (message + '\n');
 
-        createChatLine(message);
+        createChatLine(message,username);
     };
 
     chatSocket.onclose = function(e) {

@@ -26,8 +26,10 @@
                                 <a class="dropdown-item" href="{% url 'index' %}">graytale</a>
                                 <a class="dropdown-item" href="{% url 'index' %}g/pc-building/">pc-building</a>
                                 <a class="dropdown-item" href="{% url 'index' %}g/gaming/">gaming</a>
+                                {% if user.is_authenticated %}
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="{% url 'create' %}">Create a post</a>
+                                {% endif %}
                             </div>
                         </li>
                     </ul>
@@ -117,7 +119,8 @@
         }
 
         chatSocket.send(JSON.stringify({
-            'message': message
+            'message': message,
+            'username': '{{user}}',
         }));
 
         messageInputDom.value = '';
@@ -128,7 +131,7 @@
         objDiv.scrollTop = objDiv.scrollHeight;
     }
 
-    function createChatLine(m) {
+    function createChatLine(m,username) {
         var chatline_div = $('<div/>', {
             class : 'chat-line col-md-12',
         }).appendTo($('#chat-log-div'));
@@ -137,7 +140,7 @@
             class: 'msg-text'
         }).appendTo(chatline_div);
 
-        chatline_txt.text('{{user}}: ' + m);
+        chatline_txt.text(username + ': ' + m);
 
         scrollBottom();
     }
@@ -153,9 +156,10 @@
     chatSocket.onmessage = function(e) {
         var data = JSON.parse(e.data);
         var message = data['message'];
+        var username = data['username'];
         // document.querySelector('#chat-log').value += (message + '\n');
 
-        createChatLine(message);
+        createChatLine(message,username);
     };
 
     chatSocket.onclose = function(e) {
