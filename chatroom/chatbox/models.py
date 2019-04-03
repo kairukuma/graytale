@@ -13,6 +13,7 @@ class Message(models.Model):
     username = models.CharField(max_length=32,default='user')
     message_text = models.CharField(max_length=1000)
     room_name = models.CharField(max_length=200,default='lobby')
+    post_id = models.IntegerField(default=0)
 
     datetime = models.IntegerField(default=time.mktime(dt.timetuple()))
 

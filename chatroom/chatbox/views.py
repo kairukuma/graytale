@@ -33,14 +33,30 @@ def index(request):
     return render(request,'chat/index.html',{})
 
 def room(request, room_name='graytale'):
-    messages = Message.objects.filter(room_name=room_name).order_by('datetime')[:20]
-    posts = Post.objects.order_by('datetime')[:10]
+    messages = Message.objects.filter(room_name=room_name, post_id=0).order_by('datetime')[:20]
+
+    if room_name == 'graytale':
+        posts = Post.objects.order_by('datetime')[:10]
+    else:
+        posts = Post.objects.filter(topic=room_name).order_by('datetime')[:10]
 
     return render(request,'chat/room.html', {
         'room_name': mark_safe(room_name),
         'room_name_json': mark_safe(json.dumps(room_name)),
         'chat_history' : messages,
         'posts': posts,
+    })
+
+def post_view(request, room_name='graytale', post_id='0'):
+    post = Post.objects.filter(topic=room_name,id=post_id)[0]
+    messages = Message.objects.filter(room_name=room_name, post_id=post_id).order_by('datetime')[:20]
+
+    return render(request,'chat/post.html', {
+        'chat_history': messages,
+        'room_name': room_name,
+        'room_name_json': mark_safe(json.dumps(room_name)),
+        'id': post_id,
+        'post': post,
     })
 
 def create(request):

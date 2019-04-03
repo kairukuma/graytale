@@ -15,6 +15,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.user = self.scope['user']
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = 'chat_%s' % self.room_name
+        self.post_id = self.scope['url_route']['kwargs']['post_id'] if 'post_id' in self.scope['url_route']['kwargs'] else 0
 
         # Join room group
         await self.channel_layer.group_add(
@@ -46,6 +47,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             message_text=message,
             room_name=self.room_name,
             username=self.user.username,
+            post_id = self.post_id,
             datetime=time.mktime(dt.timetuple()),
         )
         m.save()
