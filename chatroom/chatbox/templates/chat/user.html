@@ -1,0 +1,43 @@
+{% extends "chat/base.html" %}
+{% load timetags %}
+
+{% block content %}
+
+{% include "chat/navbar.html" %}
+<div class="container">
+    <h1 class="display-4 pb-4">{{user.username}}'s user profile</h1>
+    <hr>
+
+    <div class="row" id="user-profile-wrapper">
+        <div class="col-md-3" id="user-info">
+            <h5 class="font-weight-normal">User Info</h5>
+            <hr>
+            <div class="font-weight-normal">Joined {{user.date_joined|date:"M d, Y"}}</div>
+        </div>
+        <div class="col-md-5" id="msg-history">
+            <h5 class="font-weight-normal">Message History</h5>
+            <hr>
+            <div id="user-message-wrapper">
+                {% for message in messages %}
+                <div class="user-message">
+                    <div class="font-italic font-weight-light">{{message.datetime | print_timestamp}}</div>
+                    <div class="font-weight-normal">{{message}}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-md-4" id="user-info">
+            <h5 class="font-weight-normal">Post History</h5>
+            <hr>
+            {% for post in posts %}
+            <div class="user-post">
+                <div class="font-italic font-weight-light">{{post.datetime | print_timestamp}}</div>
+                <a href="{% url 'index' %}g/{{post.topic}}/{{post.id}}">{{post.title}}</a>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</div>
+{% endblock content %}

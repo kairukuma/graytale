@@ -12,43 +12,7 @@
         <!--<textarea id="chat-log" cols="100" rows="1"></textarea><br/>-->
         <div class="row flex-fill">
             <div class="posts col-md-6">
-                <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            <a class="navbar-brand mr-auto" href="{% url 'index' %}">Gray Tale</a>
-                        </li>
-                        <span id="navbar-spacer" class="ml-2"></span>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                {{room_name}}
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{% url 'index' %}">graytale</a>
-                                <a class="dropdown-item" href="{% url 'index' %}g/pc-building/">pc-building</a>
-                                <a class="dropdown-item" href="{% url 'index' %}g/gaming/">gaming</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="{% url 'create' %}">Create a post</a>
-                            </div>
-                        </li>
-                    </ul>
-                    <ul class="navbar-nav ml-auto">
-                        {% if user.is_authenticated %}
-                        <li class="nav-item my-auto">
-                            <span>Hi, {{ user }}!</span>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-                        </li>
-                        {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="modal" data-target="#modal" href="{% url 'login' %}">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="modal" data-target="#modal" href="{% url 'register' %}">Register</a>
-                        </li>
-                        {% endif %}
-                    </ul>
-                </nav>
+                {% include "chat/navbar.html" %}
                 <div id="posts-window" class="row post-wrapper">
                     <div class="col-md-12 px-4 pt-4 post-header">
                         <h5><a href="{{post.url}}">{{post.title}}</a></h5>
@@ -64,8 +28,7 @@
                     <div class="row" id="chat-log-div">
                     {% for msg in chat_history %}
                         <div class="chat-line col-md-11">
-                            <span class="msg-text">{{msg.username}}: {{msg.message_text}}</span>
-                            <!--<span class="msg-date-time float-right">{{msg.year}}-{{msg.month}}-{{msg.day}} {{msg.hour}}:{{msg.minute}}:{{msg.second}}</span>-->
+                                <a class="msg-user" href="{% url 'index' %}user/{{msg.username}}">{{msg.username}}</a><span class="msg-sep pr-1">:</span><span class="msg-text">{{msg.message_text | urlize}}</span>
                         </div>
                     {% endfor %}
                     </div>
@@ -123,18 +86,29 @@
 
     function createChatLine(m,username) {
         var chatline_div = $('<div/>', {
-            class : 'chat-line col-md-12',
+            class : 'chat-line col-md-11',
         }).appendTo($('#chat-log-div'));
+
+        var chatline_user = $('<a/>', {
+            href: '{% url "index" %}user/'+username,
+            class: 'msg-user',
+        }).appendTo(chatline_div);
+
+        var chatline_sep = $('<span/>', {
+            class: 'msg-sep pr-1',
+        }).appendTo(chatline_div);
 
         var chatline_txt = $('<span/>',{
             class: 'msg-text'
         }).appendTo(chatline_div);
 
-        chatline_txt.text(username + ': ' + m);
+        chatline_user.text(username);
+        chatline_sep.text(':');
+        chatline_txt.html(urlize(m));
 
         scrollBottom();
     }
-
+    
     scrollBottom();
 
     var roomName = {{ room_name_json }};

@@ -1,0 +1,42 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+            <a class="navbar-brand mr-auto" href="{% url 'index' %}">Gray Tale</a>
+        </li>
+        <span id="navbar-spacer" class="ml-2"></span>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{room_name}}
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="{% url 'index' %}">graytale</a>
+                <a class="dropdown-item" href="{% url 'index' %}g/pc-building/">pc-building</a>
+                <a class="dropdown-item" href="{% url 'index' %}g/gaming/">gaming</a>
+                {% if user.is_authenticated %}
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{% url 'create' %}">Create a post</a>
+                {% endif %}
+            </div>
+        </li>
+    </ul>
+    <ul class="navbar-nav ml-auto">
+        {% if user.is_authenticated %}
+        <li class="nav-item my-auto mx-2">
+            <span>Hi, <a href="{% url 'index' %}user/{{user}}" class=>{{ user }}</a>!</span>
+        </li>
+        <li class="nav-item my-auto">
+            <a href="{% url 'index' %}user/{{user}}" class="nav-link">Profile</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="modal" data-target="#modal" href="{% url 'login' %}">Login</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="modal" data-target="#modal" href="{% url 'register' %}">Register</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>

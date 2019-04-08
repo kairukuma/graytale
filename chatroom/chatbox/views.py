@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.http import HttpResponseRedirect
+from django.contrib.auth.models import User
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils.safestring import mark_safe
@@ -8,7 +9,7 @@ from django.views import generic
 
 from datetime import datetime
 
-from .models import Message, Post
+from .models import Message, Post, Topic
 
 import json, time
 
@@ -33,7 +34,12 @@ def index(request):
     return render(request,'chat/index.html',{})
 
 def room(request, room_name='graytale'):
-    messages = Message.objects.filter(room_name=room_name, post_id=0).order_by('datetime')[:20]
+    topic = Topic.objects.filter(name=room_name)
+
+    if len(topic) == 0:
+        raise Http404("Page does not exist")
+
+    messages = reversed(Message.objects.filter(room_name=room_name, post_id=0).order_by('-datetime')[:20])
 
     if room_name == 'graytale':
         posts = Post.objects.order_by('datetime')[:10]
@@ -49,7 +55,7 @@ def room(request, room_name='graytale'):
 
 def post_view(request, room_name='graytale', post_id='0'):
     post = Post.objects.filter(topic=room_name,id=post_id)[0]
-    messages = Message.objects.filter(room_name=room_name, post_id=post_id).order_by('datetime')[:20]
+    messages = reversed(Message.objects.filter(room_name=room_name, post_id=post_id).order_by('-datetime')[:20])
 
     return render(request,'chat/post.html', {
         'chat_history': messages,
@@ -57,6 +63,18 @@ def post_view(request, room_name='graytale', post_id='0'):
         'room_name_json': mark_safe(json.dumps(room_name)),
         'id': post_id,
         'post': post,
+    })
+
+def user(request, user_name):
+    u = User.objects.get(username=user_name)
+    messages = Message.objects.filter(username=user_name).order_by('datetime')
+    posts = Post.objects.filter(username=user_name).order_by('datetime')
+    
+    return render(request,'chat/user.html', {
+        'user' : u,
+        'messages' : messages,
+        'posts' : posts,
+        'room_name' : 'Topic',
     })
 
 def create(request):

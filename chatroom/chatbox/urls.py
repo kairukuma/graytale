@@ -7,6 +7,7 @@ urlpatterns = [
     url(r'^create/',views.create,name='create'),
     url(r'^g/(?P<room_name>[^/]+)/$',views.room,name='room'),
     url(r'^g/(?P<room_name>[^/]+)/(?P<post_id>[^/]+)$',views.post_view,name='post'),
+    url(r'^user/(?P<user_name>[^/]+)/$',views.user,name='user_page')
 ]
 
 account_urlpatterns = [
