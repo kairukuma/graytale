@@ -16,12 +16,12 @@ function urlize(inputText) {
     return replacedText;
 }
 
-function subscribe(url, csrf_token) {
+function subscribe(url) {
     $.ajax({
         url: url,
         method: "post",
         data: {
-            csrfmiddlewaretoken: csrf_token,
+            csrfmiddlewaretoken: Cookies.get('csrftoken'),
             function: 'subscribe',
         },
         success: function(data) {

@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils.safestring import mark_safe
 from django.views import generic
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -51,6 +52,7 @@ def room_data(request, room_name, post_id):
 
     return subscriptions, topic, messages
 
+@ensure_csrf_cookie
 def room(request, room_name='graytale'):
     
     subscriptions, topic, messages = room_data(request, room_name, 0)
@@ -84,6 +86,7 @@ def room(request, room_name='graytale'):
         'chat_history' : messages,
         'subscribed' : subscribed,
         'subscriptions' : subscriptions,
+        'subscribable': True,
         'posts': posts,
     })
 
@@ -104,6 +107,7 @@ def post_view(request, room_name='graytale', post_id='0'):
         'room_name_json': mark_safe(json.dumps(room_name)),
         'subscribed' : subscribed,
         'subscriptions': subscriptions,
+        'subscribable': True,
         'id': post_id,
         'post': post,
     })
@@ -114,10 +118,11 @@ def user(request, user_name):
     posts = Post.objects.filter(username=user_name).order_by('datetime')
     
     return render(request,'chat/user.html', {
-        'user' : u,
+        'user' : request.user,
         'messages' : messages,
         'posts' : posts,
         'room_name' : 'Topic',
+        'subscribable': False,
     })
 
 def create(request):

@@ -22,13 +22,15 @@
 
         {% if user.is_authenticated and room_name != 'graytale' %}
         <li class="nav-item my-auto">
-            <button id="sub-button" class="btn btn-primary {% if not subscribed %}not-subbed{% else %}subbed{% endif %}" onclick="subscribe('/g/{{room_name}}/','{{csrf_token}}')">
+            {% if subscribable %}
+            <button id="sub-button" class="btn btn-primary {% if not subscribed %}not-subbed{% else %}subbed{% endif %}" onclick="subscribe('/g/{{room_name}}/')">
                 {% if not subscribed %}
                 Subscribe
                 {% else %}
                 Unsubscribe
                 {% endif %}
             </button>
+            {% endif %}
         </li>
         {% endif %}
     </ul>
