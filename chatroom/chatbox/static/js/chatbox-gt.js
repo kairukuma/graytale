@@ -15,3 +15,27 @@ function urlize(inputText) {
 
     return replacedText;
 }
+
+function subscribe(url, csrf_token) {
+    $.ajax({
+        url: url,
+        method: "post",
+        data: {
+            csrfmiddlewaretoken: csrf_token,
+            function: 'subscribe',
+        },
+        success: function(data) {
+            var subbed = data.subscribed;
+
+            if (subbed) {
+                $("#sub-button").removeClass("not-subbed");
+                $("#sub-button").addClass("subbed");
+                $("#sub-button").text('Unsubscribe');
+            } else {
+                $("#sub-button").removeClass("subbed");
+                $("#sub-button").addClass("not-subbed");
+                $("#sub-button").text('Subscribe');
+            }
+        }
+    });
+}

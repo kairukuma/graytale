@@ -1,15 +1,17 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils.safestring import mark_safe
 from django.views import generic
 
+from django.core.exceptions import ObjectDoesNotExist
+
 from datetime import datetime
 
-from .models import Message, Post, Topic
+from .models import Message, Post, Topic, Profile
 
 import json, time
 
@@ -33,34 +35,75 @@ class Create(forms.Form):
 def index(request):
     return render(request,'chat/index.html',{})
 
-def room(request, room_name='graytale'):
+def room_data(request, room_name, post_id):
+
+    if request.user.is_authenticated:
+        try:
+            subscriptions = request.user.profile.subscriptions.all()
+        except:
+            Profile.objects.create(user=request.user)
+            subscriptions = request.user.profile.subscriptions.all()
+    else:
+        subscriptions = []
+        
     topic = Topic.objects.filter(name=room_name)
+    messages = reversed(Message.objects.filter(room_name=room_name, post_id=post_id).order_by('-datetime')[:20])
+
+    return subscriptions, topic, messages
+
+def room(request, room_name='graytale'):
+    
+    subscriptions, topic, messages = room_data(request, room_name, 0)
 
     if len(topic) == 0:
         raise Http404("Page does not exist")
-
-    messages = reversed(Message.objects.filter(room_name=room_name, post_id=0).order_by('-datetime')[:20])
 
     if room_name == 'graytale':
         posts = Post.objects.order_by('datetime')[:10]
     else:
         posts = Post.objects.filter(topic=room_name).order_by('datetime')[:10]
 
+    subscribed = False if len(subscriptions) == 0 else len(subscriptions.filter(name=room_name)) > 0
+
+    if request.method == 'POST':
+        if request.POST['function'] == 'subscribe':
+            # toggle subscription
+            if subscribed:
+                request.user.profile.subscriptions.remove(subscriptions.get(name=room_name))
+            else:
+                request.user.profile.subscriptions.add(Topic.objects.get(name=room_name))
+
+            return HttpResponse(json.dumps({'subscribed': not subscribed}),
+                       content_type="application/json")
+        else:
+            return False
+
     return render(request,'chat/room.html', {
         'room_name': mark_safe(room_name),
         'room_name_json': mark_safe(json.dumps(room_name)),
         'chat_history' : messages,
+        'subscribed' : subscribed,
+        'subscriptions' : subscriptions,
         'posts': posts,
     })
 
 def post_view(request, room_name='graytale', post_id='0'):
+
+    subscriptions, topic, messages = room_data(request, room_name, 0)
+
+    if len(topic) == 0:
+        raise Http404("Page does not exist")
+
     post = Post.objects.filter(topic=room_name,id=post_id)[0]
-    messages = reversed(Message.objects.filter(room_name=room_name, post_id=post_id).order_by('-datetime')[:20])
+
+    subscribed = False if len(subscriptions) == 0 else len(subscriptions.filter(name=room_name)) > 0
 
     return render(request,'chat/post.html', {
         'chat_history': messages,
         'room_name': room_name,
         'room_name_json': mark_safe(json.dumps(room_name)),
+        'subscribed' : subscribed,
+        'subscriptions': subscriptions,
         'id': post_id,
         'post': post,
     })

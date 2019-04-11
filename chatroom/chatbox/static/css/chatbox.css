@@ -34,6 +34,33 @@ html, body {
     min-height: 10vh;
 }
 
+.subbed {
+    background-color: rgb(200,200,200);
+    color: rgb(80,80,80);
+    border-color: rgba(255,255,255,0);
+}
+
+.subbed:hover {
+    background-color: rgb(150,150,150);
+    color: rgb(80,80,80);
+    border-color: rgba(255,255,255,0);
+}
+
+.subbed:active {
+    background-color: rgb(175,175,175) !important;
+    color: rgb(80,80,80);
+    box-shadow: 0 0 0 0.2rem rgba(222,222,222,.5) !important;
+}
+
+.subbed:focus {
+    background-color: rgb(200,200,200);
+    box-shadow: 0 0 0 0.2rem rgba(222,222,222,.5);
+}
+
+.subbed:mousedown {
+    background-color: rgb(175,175,175);
+}
+
 #chat-log-div {
     min-height: 100%;
 }

@@ -24,7 +24,7 @@
                                     <div class="gt-post-link">
                                         <a href="{{post.url}}" target="_blank">{{post.title}}</a>
                                     </div>
-                                    Submitted by {{post.username}}
+                                    Submitted by <a class="text-muted" href="{% url 'index' %}user/{{post.username}}">{{post.username}}</a> to <a class="text-muted" href="{% url 'index' %}g/{{post.topic}}">{{post.topic}}</a>
                                 </div>
                             </div>
                         </div>

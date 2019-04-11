@@ -10,14 +10,27 @@
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="{% url 'index' %}">graytale</a>
-                <a class="dropdown-item" href="{% url 'index' %}g/pc-building/">pc-building</a>
-                <a class="dropdown-item" href="{% url 'index' %}g/gaming/">gaming</a>
+                {% for sub in subscriptions %}
+                <a class="dropdown-item" href="{% url 'index' %}g/{{sub.name}}">{{sub.name}}</a>
+                {% endfor %}
                 {% if user.is_authenticated %}
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{% url 'create' %}">Create a post</a>
                 {% endif %}
             </div>
         </li>
+
+        {% if user.is_authenticated and room_name != 'graytale' %}
+        <li class="nav-item my-auto">
+            <button id="sub-button" class="btn btn-primary {% if not subscribed %}not-subbed{% else %}subbed{% endif %}" onclick="subscribe('/g/{{room_name}}/','{{csrf_token}}')">
+                {% if not subscribed %}
+                Subscribe
+                {% else %}
+                Unsubscribe
+                {% endif %}
+            </button>
+        </li>
+        {% endif %}
     </ul>
     <ul class="navbar-nav ml-auto">
         {% if user.is_authenticated %}
