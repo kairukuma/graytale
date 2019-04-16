@@ -1,0 +1,18 @@
+{% load generaltags %}
+
+<div class="sidebar">
+    <div class="container">
+        <div class="row sub-icon-wrapper">
+            <div class="sub-icon m-auto display-4">
+                <a href="{% url 'index' %}">Gr</a>
+            </div>
+        </div>
+        {% for sub in subscriptions %}
+        <div class="row sub-icon-wrapper">
+            <div class="sub-icon m-auto display-4">
+                <a href="{% url 'index' %}g/{{sub.name}}">{{ sub | subhead }}{{ sub | subneck }}</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>

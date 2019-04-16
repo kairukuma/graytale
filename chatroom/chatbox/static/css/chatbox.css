@@ -2,6 +2,10 @@ html, body {
     height: 100%;
 }
 
+.gt-body {
+    overflow: hidden;
+}
+
 .chat-line {
     border: 1px solid rgba(120,120,120,0.66);
     border-radius: 4px;
@@ -59,6 +63,10 @@ html, body {
 
 .subbed:mousedown {
     background-color: rgb(175,175,175);
+}
+
+#content {
+    padding-left: 72px;
 }
 
 #chat-log-div {

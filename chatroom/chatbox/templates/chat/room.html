@@ -9,47 +9,51 @@
 {% endblock site_head %}
 
 {% block content %}
-        <!--<textarea id="chat-log" cols="100" rows="1"></textarea><br/>-->
         <div class="row h-100">
-            <div class="posts col-md-6">
-                {% include "chat/navbar.html" %}
-                <div id="posts-window" class="posts-wrapper pre-scrollable">
-                    {% for post in posts %}
-                        <div class="gt-post border rounded py-3 px-4">
-                            <div class="row">
-                                <div class="col-md-1 my-auto">
-                                    <a href="{% url 'index' %}g/{{post.topic}}/{{post.id}}" class="text-secondary"><i class="fas fa-chevron-right fa-2x"></i></a>
-                                </div>
-                                <div class="gt-post-details col-md-11">
-                                    <div class="gt-post-link">
-                                        <a href="{{post.url}}" target="_blank">{{post.title}}</a>
+            {% include "chat/sidebar.html" %}
+            <div class="col-md-12" id="content">
+                <div class="row">
+                    <div class="posts col-md-6">
+                        {% include "chat/navbar.html" %}
+                        <div id="posts-window" class="posts-wrapper pre-scrollable">
+                            {% for post in posts %}
+                                <div class="gt-post border rounded py-3 px-4">
+                                    <div class="row">
+                                        <div class="col-md-1 my-auto">
+                                            <a href="{% url 'index' %}g/{{post.topic}}/{{post.id}}" class="text-secondary"><i class="fas fa-chevron-right fa-2x"></i></a>
+                                        </div>
+                                        <div class="gt-post-details col-md-11">
+                                            <div class="gt-post-link">
+                                                <a href="{{post.url}}" target="_blank">{{post.title}}</a>
+                                            </div>
+                                            Submitted by <a class="text-muted" href="{% url 'index' %}user/{{post.username}}">{{post.username}}</a> to <a class="text-muted" href="{% url 'index' %}g/{{post.topic}}">{{post.topic}}</a>
+                                        </div>
                                     </div>
-                                    Submitted by <a class="text-muted" href="{% url 'index' %}user/{{post.username}}">{{post.username}}</a> to <a class="text-muted" href="{% url 'index' %}g/{{post.topic}}">{{post.topic}}</a>
                                 </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="col-md-6" id="chat-log">
+                        <div id="chat-log-window" class="chat-log-wrapper pre-scrollable">
+                            <div class="row" id="chat-log-div">
+                            {% for msg in chat_history %}
+                                <div class="chat-line col-md-11">
+                                    <a class="msg-user" href="{% url 'index' %}user/{{msg.username}}">{{msg.username}}</a><span class="msg-sep pr-1">:</span><span class="msg-text">{{msg.message_text | urlize}}</span>
+                                    <!--<span class="msg-date-time float-right">{{msg.year}}-{{msg.month}}-{{msg.day}} {{msg.hour}}:{{msg.minute}}:{{msg.second}}</span>-->
+                                </div>
+                            {% endfor %}
                             </div>
                         </div>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="col-md-6" id="chat-log">
-                <div id="chat-log-window" class="chat-log-wrapper pre-scrollable">
-                    <div class="row" id="chat-log-div">
-                    {% for msg in chat_history %}
-                        <div class="chat-line col-md-11">
-                            <a class="msg-user" href="{% url 'index' %}user/{{msg.username}}">{{msg.username}}</a><span class="msg-sep pr-1">:</span><span class="msg-text">{{msg.message_text | urlize}}</span>
-                            <!--<span class="msg-date-time float-right">{{msg.year}}-{{msg.month}}-{{msg.day}} {{msg.hour}}:{{msg.minute}}:{{msg.second}}</span>-->
+                        <div class="chat-input-wrapper">
+                            <div class="row">
+                                {% if user.is_authenticated %}
+                                <input id="chat-message-input" class="form-control col-md-12" type="text" placeholder="Press 'Enter' to send a message"/>
+                                <!--<input class="col-md-1 btn btn-primary col-md-3" id="chat-message-submit" type="button" value="Send"/>-->
+                                {% else %}
+                                <input id="chat-message-input" class="form-control col-md-12" type="text" size="2000" placeholder="Please log in to join the chat." disabled/>
+                                {% endif %}
+                            </div>
                         </div>
-                    {% endfor %}
-                    </div>
-                </div>
-                <div class="chat-input-wrapper">
-                    <div class="row">
-                        {% if user.is_authenticated %}
-                        <input id="chat-message-input" class="form-control col-md-12" type="text" placeholder="Press 'Enter' to send a message"/>
-                        <!--<input class="col-md-1 btn btn-primary col-md-3" id="chat-message-submit" type="button" value="Send"/>-->
-                        {% else %}
-                        <input id="chat-message-input" class="form-control col-md-12" type="text" size="2000" placeholder="Please log in to join the chat." disabled/>
-                        {% endif %}
                     </div>
                 </div>
             </div>
