@@ -87,6 +87,7 @@ def room(request, room_name='graytale'):
         'subscribed' : subscribed,
         'subscriptions' : subscriptions,
         'subscribable': True,
+        'topics' : Topic.objects.all(),
         'posts': posts,
     })
 

@@ -2,15 +2,15 @@
 
 <div class="sidebar">
     <div class="container">
-        <div class="row sub-icon-wrapper">
+        <!--<div class="row sub-icon-wrapper">
             <div class="sub-icon m-auto display-4">
                 <a href="{% url 'index' %}">Gr</a>
             </div>
-        </div>
-        {% for sub in subscriptions %}
+        </div>-->
+        {% for topic in topics %}
         <div class="row sub-icon-wrapper">
             <div class="sub-icon m-auto display-4">
-                <a href="{% url 'index' %}g/{{sub.name}}">{{ sub | subhead }}{{ sub | subneck }}</a>
+                <a href="{% url 'index' %}g/{{topic.name}}">{{ topic | subhead }}{{ topic | subneck }}</a>
             </div>
         </div>
         {% endfor %}

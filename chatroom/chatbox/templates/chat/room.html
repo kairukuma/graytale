@@ -89,6 +89,11 @@
             'username': '{{user}}',
         }));
 
+        notificationSocket.send(JSON.stringify({
+            'message': message,
+            'username': '{{user}}',
+        }));
+
         messageInputDom.value = '';
     }
 
@@ -150,8 +155,5 @@
         }
     };
 
-    /* document.querySelector('#chat-message-submit').onclick = function(e) {
-        sendMessage();
-    }; */
 </script>
 {% endblock js %}
