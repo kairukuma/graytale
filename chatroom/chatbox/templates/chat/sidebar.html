@@ -8,10 +8,11 @@
             </div>
         </div>-->
         {% for topic in topics %}
-        <div class="row sub-icon-wrapper">
+        <div class="row sub-icon-wrapper" id="icon-{{topic.name}}">
             <div class="sub-icon m-auto display-4">
                 <a href="{% url 'index' %}g/{{topic.name}}">{{ topic | subhead }}{{ topic | subneck }}</a>
             </div>
+            <div class="notification-badge hidden" id="notification-badge-{{topic.name}}"></div>
         </div>
         {% endfor %}
     </div>

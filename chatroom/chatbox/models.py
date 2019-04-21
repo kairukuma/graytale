@@ -9,7 +9,7 @@ class Message(models.Model):
 
     dt = datetime.now()
 
-    #user = models.ForeignKey(User,default=1,on_delete=models.CASCADE)
+    user = models.ForeignKey(User,default=0,on_delete=models.CASCADE)
     username = models.CharField(max_length=32,default='user')
     message_text = models.CharField(max_length=1000)
     room_name = models.CharField(max_length=200,default='lobby')

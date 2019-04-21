@@ -1,0 +1,107 @@
+<script>
+
+    $('#modal').on('show.bs.modal', function (event) {
+        var modal = $(this)
+        var button = $(event.relatedTarget)
+        var url = button.attr('href');
+        $.ajax({
+            url: url,
+            context: document.body
+        }).done(function(response) {
+            modal.html(response);
+        });
+    })
+
+    function sendMessage() {
+        var messageInputDom = document.querySelector('#chat-message-input');
+        var message = messageInputDom.value;
+
+        if (message.trim().length == 0) {
+            return;
+        }
+
+        chatSocket.send(JSON.stringify({
+            'message': message,
+            'username': '{{user}}',
+        }));
+
+        /*notificationSocket.send(JSON.stringify({
+            'message': message,
+            'username': '{{user}}',
+        }));*/
+
+        messageInputDom.value = '';
+    }
+
+    function scrollBottom() {
+        var objDiv = document.getElementById("chat-log-window");
+        objDiv.scrollTop = objDiv.scrollHeight;
+    }
+
+    function createChatLine(m,username) {
+        var chatline_div = $('<div/>', {
+            class : 'chat-line col-md-11',
+        }).appendTo($('#chat-log-div'));
+
+        var chatline_user = $('<a/>', {
+            href: '{% url "index" %}user/'+username,
+            class: 'msg-user',
+        }).appendTo(chatline_div);
+
+        var chatline_sep = $('<span/>', {
+            class: 'msg-sep pr-1',
+        }).appendTo(chatline_div);
+
+        var chatline_txt = $('<span/>',{
+            class: 'msg-text'
+        }).appendTo(chatline_div);
+
+        chatline_user.text(username);
+        chatline_sep.text(':');
+        chatline_txt.html(urlize(m));
+
+        scrollBottom();
+    }
+
+    scrollBottom();
+
+    var roomName = {{ room_name_json }};
+
+    var chatSocket = new WebSocket(
+        'ws://' + window.location.host +
+        '/ws/' + roomName + '/');
+
+    chatSocket.onmessage = function(e) {
+
+        var data = JSON.parse(e.data);
+
+        switch (data['type']) {
+            case 'chat_message':
+            var message = data['message'];
+            var username = data['username'];
+
+            createChatLine(message,username);
+            break;
+            case 'notification':
+            if ('{{room_name}}' != data['room_name']) {
+                $('#notification-badge-'+data['room_name']).removeClass('hidden');
+            }
+            break;
+            default:
+            break;
+        }
+
+    };
+
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+    document.querySelector('#chat-message-input').focus();
+    document.querySelector('#chat-message-input').onkeyup = function(e) {
+        if (e.keyCode === 13) {  // enter, return
+            sendMessage();
+        }
+    };
+
+</script>

@@ -24,12 +24,21 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
+        await self.channel_layer.group_add(
+            'notifications',
+            self.channel_name
+        )
+
         await self.accept()
 
     async def disconnect(self, close_code):
         # Leave room group
         await self.channel_layer.group_discard(
             self.room_group_name,
+            self.channel_name
+        )
+        await self.channel_layer.group_discard(
+            'notifications',
             self.channel_name
         )
 
@@ -46,6 +55,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         m = Message(
             message_text=message,
+            user=self.user,
             room_name=self.room_name,
             username=self.user.username,
             post_id = self.post_id,
@@ -63,6 +73,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
             }
         )
 
+        await self.channel_layer.group_send(
+            'notifications',
+            {
+                'type': 'notification',
+                'room_name': self.room_name,
+            }
+        )
+
     # Receive message from room group
     async def chat_message(self, event):
         message = event['message']
@@ -70,11 +88,20 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
+            'type': 'chat_message',
             'message': message,
             'username': username,
         }))
 
-class NotificationConsumer(AsyncWebsocketConsumer):
+    async def notification(self, event):
+        room_name = event['room_name']
+
+        await self.send(text_data=json.dumps({
+            'type': 'notification',
+            'room_name' : room_name,
+        }))
+
+"""class NotificationConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
         self.user = self.scope['user']
@@ -128,4 +155,4 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'message': message,
             'username': username,
-        }))
+        }))"""
