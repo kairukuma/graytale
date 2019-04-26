@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 
-from .models import Message, Post, Topic, Profile
+from .models import Message, Post, Topic, Profile, Notification
 # Register your models here.
 
 class UserInline(admin.StackedInline):
@@ -21,3 +21,4 @@ admin.site.register(User,UserAdmin)
 admin.site.register(Message)
 admin.site.register(Post)
 admin.site.register(Topic)
+admin.site.register(Notification)

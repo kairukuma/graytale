@@ -2,8 +2,9 @@ from asgiref.sync import async_to_sync
 from channels.consumer import SyncConsumer
 from channels.auth import get_user
 from channels.generic.websocket import WebsocketConsumer, AsyncWebsocketConsumer
+from django.contrib.auth.models import User
 
-from .models import Message
+from .models import Message, Notification, Topic
 
 from datetime import datetime
 
@@ -62,6 +63,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
             datetime=time.mktime(dt.timetuple()),
         )
         m.save()
+
+        topic = Topic.objects.get(name=self.room_name)
+
+        if Notification.objects.filter(topic=topic).exists():
+            n = Notification.objects.get(topic=topic)
+        else:
+            n = Notification.objects.create(topic=topic)
+
+        n.users.set(User.objects.all())
+        n.save()
 
         # Send message to room group
         await self.channel_layer.group_send(
