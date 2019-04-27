@@ -12,7 +12,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from datetime import datetime
 
-from .models import Message, Post, Topic, Profile
+from .models import Message, Post, Topic, Profile, Notification
 
 import json, time
 
@@ -65,8 +65,35 @@ def room(request, room_name='graytale'):
     else:
         posts = Post.objects.filter(topic=room_name).order_by('datetime')[:10]
 
+    # Check if user is subbed
     subscribed = False if len(subscriptions) == 0 else len(subscriptions.filter(name=room_name)) > 0
 
+    # If user is on a page, remove its notification for the user
+    notification = None
+
+    currentTopic = Topic.objects.get(name=room_name)
+    if Notification.objects.filter(topic=currentTopic).exists():
+        notification = Notification.objects.get(topic=currentTopic)
+        notification.users.remove(request.user)
+        notification.save()
+
+    # Check if user is notified
+    topics = {}
+
+    for topic in Topic.objects.all():
+        notified = False
+
+        if Notification.objects.filter(topic=topic).exists():
+            notification = Notification.objects.get(topic=topic)
+            if request.user in notification.users.all():
+                notified = True
+
+        topics[topic.name] = {
+            'topic': topic.name,
+            'notification': notified,
+        }
+
+    # If request method post
     if request.method == 'POST':
         if request.POST['function'] == 'subscribe':
             # toggle subscription
@@ -80,6 +107,7 @@ def room(request, room_name='graytale'):
         else:
             return False
 
+    # If request method get
     return render(request,'chat/room.html', {
         'room_name': mark_safe(room_name),
         'room_name_json': mark_safe(json.dumps(room_name)),
@@ -87,7 +115,7 @@ def room(request, room_name='graytale'):
         'subscribed' : subscribed,
         'subscriptions' : subscriptions,
         'subscribable': True,
-        'topics' : Topic.objects.all(),
+        'topics' : topics,
         'posts': posts,
     })
 

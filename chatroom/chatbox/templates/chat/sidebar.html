@@ -7,12 +7,12 @@
                 <a href="{% url 'index' %}">Gr</a>
             </div>
         </div>-->
-        {% for topic in topics %}
+        {% for topic, topic_data in topics.items %}
         <div class="row sub-icon-wrapper" id="icon-{{topic.name}}">
             <div class="sub-icon m-auto display-4">
-                <a href="{% url 'index' %}g/{{topic.name}}">{{ topic | subhead }}{{ topic | subneck }}</a>
+                <a href="{% url 'index' %}g/{{topic}}">{{ topic_data | subhead }}{{ topic_data | subneck }}</a>
             </div>
-            <div class="notification-badge hidden" id="notification-badge-{{topic.name}}"></div>
+            <div class="notification-badge {{topic_data | notified}}" id="notification-badge-{{topic}}"></div>
         </div>
         {% endfor %}
     </div>

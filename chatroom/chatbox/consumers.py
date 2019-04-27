@@ -69,7 +69,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if Notification.objects.filter(topic=topic).exists():
             n = Notification.objects.get(topic=topic)
         else:
-            n = Notification.objects.create(topic=topic)
+            n = Notification.objects.create(name=topic.name,topic=topic)
 
         n.users.set(User.objects.all())
         n.save()

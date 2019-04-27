@@ -42,8 +42,12 @@ class Topic(models.Model):
         return self.name
 
 class Notification(models.Model):
+    name = models.CharField(max_length=48,default='')
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
     users = models.ManyToManyField(User)
+
+    def __str__(self):
+        return self.name
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
