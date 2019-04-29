@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'^accounts/admin/', admin.site.urls),
     url(r'^accounts/', include('django.contrib.auth.urls')),
     url(r'^accounts/', include(account_urlpatterns)),
+    url(r'^webpush/', include('webpush.urls')),
 ]

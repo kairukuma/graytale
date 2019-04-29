@@ -25,12 +25,21 @@
             'username': '{{user}}',
         }));
 
-        /*notificationSocket.send(JSON.stringify({
-            'message': message,
-            'username': '{{user}}',
-        }));*/
-
         messageInputDom.value = '';
+    }
+
+    function sendAdminNotifications(room_name) {
+        url = '/sendpush/'
+        console.log(url);
+        $.ajax({
+            url: url,
+            method: 'post',
+            data: {
+                room_name: room_name,
+            }
+        }).done(function(response) {
+            console.log(response);
+        });
     }
 
     function scrollBottom() {
@@ -67,9 +76,15 @@
 
     var roomName = {{ room_name_json }};
 
+    {% if post %}
+    var chatSocket = new WebSocket(
+        'ws://' + window.location.host +
+        '/ws/' + roomName + '/{{id}}/');
+    {% else %}
     var chatSocket = new WebSocket(
         'ws://' + window.location.host +
         '/ws/' + roomName + '/');
+    {% endif %}
 
     chatSocket.onmessage = function(e) {
 
@@ -83,9 +98,13 @@
             createChatLine(message,username);
             break;
             case 'notification':
+            
             if ('{{room_name}}' != data['room_name']) {
                 $('#notification-badge-'+data['room_name']).removeClass('hidden');
             }
+
+            sendAdminNotifications(data['room_name']);
+
             break;
             default:
             break;

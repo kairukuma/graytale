@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'webpush',
     'widget_tweaks',
 ]
 
@@ -142,4 +143,10 @@ CHANNEL_LAYERS = {
             'hosts': [('127.0.0.1',6379)]
         }
     }
+}
+
+WEBPUSH_SETTINGS = {
+    "VAPID_PUBLIC_KEY": "BEY5FCAORCTlyixz5haeVLePmwFsRPxe5BngO4Fs2vNsb2zQPQP5CABvxQ8n648qRRj3BOFd97Ae3t_897lixiY",
+    "VAPID_PRIVATE_KEY":"ld3cKo1vPr501T53RBPQW-O5PsyQODahrgTMxXxwFCQ",
+    "VAPID_ADMIN_EMAIL": "kylexiong1993@gmail.com"
 }

@@ -2,6 +2,7 @@
 
 {% extends "chat/base.html" %}
 {% load static %}
+{% load generaltags %}
 
 {% block site_head %}
     <script src="http://malsup.github.io/jquery.form.js"></script>
@@ -24,9 +25,9 @@
                                         </div>
                                         <div class="gt-post-details col-md-11">
                                             <div class="gt-post-link">
-                                                <a href="{{post.url}}" target="_blank">{{post.title}}</a>
+                                                <a href="{{post | validate_post_url}}" target="{{post | validate_post_external}}">{{post.title}}</a>
                                             </div>
-                                            Submitted by <a class="text-muted" href="{% url 'index' %}user/{{post.username}}">{{post.username}}</a> to <a class="text-muted" href="{% url 'index' %}g/{{post.topic}}">{{post.topic}}</a>
+                                            Submitted by <a class="text-muted" href="{% url 'index' %}user/{{post.user}}">{{post.user}}</a> to <a class="text-muted" href="{% url 'index' %}g/{{post.topic}}">{{post.topic}}</a>
                                         </div>
                                     </div>
                                 </div>
@@ -38,7 +39,7 @@
                             <div class="row" id="chat-log-div">
                             {% for msg in chat_history %}
                                 <div class="chat-line col-md-11">
-                                    <a class="msg-user" href="{% url 'index' %}user/{{msg.username}}">{{msg.username}}</a><span class="msg-sep pr-1">:</span><span class="msg-text">{{msg.message_text | urlize}}</span>
+                                    <a class="msg-user" href="{% url 'index' %}user/{{msg.user}}">{{msg.user}}</a><span class="msg-sep pr-1">:</span><span class="msg-text">{{msg.message_text | urlize}}</span>
                                     <!--<span class="msg-date-time float-right">{{msg.year}}-{{msg.month}}-{{msg.day}} {{msg.hour}}:{{msg.minute}}:{{msg.second}}</span>-->
                                 </div>
                             {% endfor %}

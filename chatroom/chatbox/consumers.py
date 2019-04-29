@@ -4,12 +4,19 @@ from channels.auth import get_user
 from channels.generic.websocket import WebsocketConsumer, AsyncWebsocketConsumer
 from django.contrib.auth.models import User
 
-from .models import Message, Notification, Topic
+from .models import Message, Notification, Topic, Post
 
 from datetime import datetime
+from webpush import send_group_notification, send_user_notification
 
 import json
 import time
+
+def send_admin_notifications():
+    payload = {"head": "Welcome!", "body": "Hello World"}
+
+    for usr in User.objects.filter(groups__name='admin'):
+        send_user_notification(user=usr, payload=payload, ttl=1000)
 
 class ChatConsumer(AsyncWebsocketConsumer):
 
@@ -17,7 +24,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.user = self.scope['user']
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = 'chat_%s' % self.room_name
-        self.post_id = self.scope['url_route']['kwargs']['post_id'] if 'post_id' in self.scope['url_route']['kwargs'] else 0
+        
+        post_id = self.scope['url_route']['kwargs']['post_id'] if 'post_id' in self.scope['url_route']['kwargs'] else None
+        if post_id is not None and Post.objects.filter(id=post_id).exists():
+            self.post = Post.objects.get(id=post_id)
+        else:
+            self.post = None
 
         # Join room group
         await self.channel_layer.group_add(
@@ -54,25 +66,26 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         dt = datetime.now()
 
+        topic = Topic.objects.get(name=self.room_name)
+
         m = Message(
             message_text=message,
             user=self.user,
-            room_name=self.room_name,
-            username=self.user.username,
-            post_id = self.post_id,
+            topic=topic,
+            post_id = self.post,
             datetime=time.mktime(dt.timetuple()),
         )
         m.save()
-
-        topic = Topic.objects.get(name=self.room_name)
 
         if Notification.objects.filter(topic=topic).exists():
             n = Notification.objects.get(topic=topic)
         else:
             n = Notification.objects.create(name=topic.name,topic=topic)
 
-        n.users.set(User.objects.all())
+        n.users.set(User.objects.filter(groups__name='admin'))
         n.save()
+
+        # send_admin_notifications()
 
         # Send message to room group
         await self.channel_layer.group_send(

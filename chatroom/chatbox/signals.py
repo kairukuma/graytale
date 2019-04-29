@@ -5,7 +5,7 @@ from .models import Message, Notification
 @receiver(post_save,sender=Message)
 def receiver(sender, **kwargs):
     m = kwargs['instance']
-    print("Serverside received message %d (user:%s, topic:%s, text:%s)" % (int(m.post_id),m.username,m.room_name,m.message_text))
+    # print("Serverside received message %d (user:%s, topic:%s, text:%s)" % (int(m.post_id),m.username,m.room_name,m.message_text))
 
 def notification_created(sender, **kwargs):
     n = kwargs['instance']
