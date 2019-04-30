@@ -23,6 +23,7 @@
         chatSocket.send(JSON.stringify({
             'message': message,
             'username': '{{user}}',
+            'currentRoomName': '{{room_name}}',
         }));
 
         messageInputDom.value = '';

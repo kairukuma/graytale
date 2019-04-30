@@ -30,8 +30,11 @@
     </div>
 
     <div class="gt-body container-fluid">
-        {% block content %}
-        {% endblock content %}
+        <div class="row h-100">
+            {% include "chat/sidebar.html" %}
+            {% block content %}
+            {% endblock content %}
+        </div>
     </div>
 </body>
 

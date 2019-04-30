@@ -34,10 +34,7 @@ class Create(forms.Form):
     # url = forms.URLField(label='URL')
     text = forms.CharField(label='Body')
 
-""" Views Functions """
-
-def index(request):
-    return render(request,'chat/index.html',{})
+""" Assist Functions """
 
 def room_data(request, room_name, post_id):
 
@@ -58,6 +55,29 @@ def room_data(request, room_name, post_id):
     messages = reversed(Message.objects.filter(topic=topic, post_id=post_id).order_by('-datetime')[:20])
 
     return subscriptions, topic, messages
+
+def get_topics(request):
+    topics = {}
+
+    for topic in Topic.objects.all():
+        notified = False
+
+        if Notification.objects.filter(topic=topic).exists():
+            notification = Notification.objects.get(topic=topic)
+            if request.user in notification.users.all():
+                notified = True
+
+        topics[topic.name] = {
+            'topic': topic.name,
+            'notification': notified,
+        }
+
+    return topics
+
+""" Views Functions """
+
+def index(request):
+    return render(request,'chat/index.html',{})
 
 @ensure_csrf_cookie
 def room(request, room_name='graytale'):
@@ -85,22 +105,6 @@ def room(request, room_name='graytale'):
             notification.users.remove(request.user)
             notification.save()
 
-    # Check if user is notified
-    topics = {}
-
-    for topic in Topic.objects.all():
-        notified = False
-
-        if Notification.objects.filter(topic=topic).exists():
-            notification = Notification.objects.get(topic=topic)
-            if request.user in notification.users.all():
-                notified = True
-
-        topics[topic.name] = {
-            'topic': topic.name,
-            'notification': notified,
-        }
-
     # If request method post
     if request.method == 'POST':
         if request.POST['function'] == 'subscribe':
@@ -123,7 +127,7 @@ def room(request, room_name='graytale'):
         'subscribed' : subscribed,
         'subscriptions' : subscriptions,
         'subscribable': True,
-        'topics' : topics,
+        'topics' : get_topics(request),
         'posts': posts,
     })
 
@@ -146,6 +150,7 @@ def post_view(request, room_name='graytale', post_id='0'):
         'subscriptions': subscriptions,
         'subscribable': True,
         'id': post_id,
+        'topics': get_topics(request),
         'post': post,
     })
 
@@ -186,6 +191,8 @@ def create(request):
 
             p.save()
 
+            sendpush_post(request)
+
             return HttpResponseRedirect(reverse_lazy('index'))
     else:
         form = Create()
@@ -194,11 +201,26 @@ def create(request):
 @require_POST
 @csrf_exempt
 def sendpush(request):
-    #print(request.user, request.POST['room_name'])
-    try:
-        payload = {'head': 'Graytale Chatroom', 'body': 'New message from %s!' % request.POST['room_name']}
-        send_user_notification(user=request.user, payload=payload, ttl=1000)
-        
-        return JsonResponse(status=200, data={"message": "Web push successful"})
-    except TypeError:
-        return JsonResponse(status=500, data={"message": "An error occurred"})
+    topic = Topic.objects.get(name=request.POST['room_name'])
+    messages = Message.objects.filter(topic=topic).order_by('-datetime')
+
+    if len(messages) > 1:
+        last_message_time = messages[1].datetime
+    else:
+        last_message_time = 0
+
+    if time.mktime(datetime.now().timetuple()) - last_message_time < 300:
+        return JsonResponse(status=200, data={"message": "Web push too soon"})
+
+    payload = {'head': 'Graytale Chatroom', 'body': 'New message from %s!' % topic}
+
+    for u in User.objects.filter(groups__name='admin'):
+        send_user_notification(user=u, payload=payload, ttl=1000)
+    
+    return JsonResponse(status=200, data={"message": "Web push successful"})
+
+@require_POST
+@csrf_exempt
+def sendpush_post(request):
+    payload = {'head': 'Graytale Post', 'body': 'New post created in %s!' % request.POST['topic']}
+    send_user_notification(user=request.user, payload=payload, ttl=1000)

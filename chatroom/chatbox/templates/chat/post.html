@@ -2,6 +2,7 @@
 
 {% extends "chat/base.html" %}
 {% load static %}
+{% load generaltags %}
 
 {% block site_head %}
     <script src="http://malsup.github.io/jquery.form.js"></script>
@@ -9,38 +10,40 @@
 {% endblock site_head %}
 
 {% block content %}
-        <!--<textarea id="chat-log" cols="100" rows="1"></textarea><br/>-->
-        <div class="row flex-fill">
-            <div class="posts col-md-6">
-                {% include "chat/navbar.html" %}
-                <div id="posts-window" class="row post-wrapper">
-                    <div class="col-md-12 px-4 pt-4 post-header">
-                        <h5><a href="{{post.url}}">{{post.title}}</a></h5>
-                        <p>Submitted by {{post.user}}</p>
-                    </div>
-                    <div class="col-md-12 posts-text pre-scrollable h-100 px-5 py-3">
-                        {{post.text}}
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6" id="chat-log">
-                <div id="chat-log-window" class="chat-log-wrapper pre-scrollable">
-                    <div class="row" id="chat-log-div">
-                    {% for msg in chat_history %}
-                        <div class="chat-line col-md-11">
-                                <a class="msg-user" href="{% url 'index' %}user/{{msg.user}}">{{msg.user}}</a><span class="msg-sep pr-1">:</span><span class="msg-text">{{msg.message_text | urlize}}</span>
+        <div class="col-md-12" id="content">
+            <!--<textarea id="chat-log" cols="100" rows="1"></textarea><br/>-->
+            <div class="row">
+                <div class="posts col-md-6">
+                    {% include "chat/navbar.html" %}
+                    <div id="posts-window" class="row post-wrapper">
+                        <div class="col-md-12 px-4 pt-4 post-header">
+                            <h5><a href="{{post.url}}">{{post.title}}</a></h5>
+                            <p>Submitted by {{post.user}}</p>
                         </div>
-                    {% endfor %}
+                        <div class="col-md-12 posts-text pre-scrollable h-100 px-5 py-3">
+                            {{post.text}}
+                        </div>
                     </div>
                 </div>
-                <div class="chat-input-wrapper">
-                    <div class="row">
-                        {% if user.is_authenticated %}
-                        <input id="chat-message-input" class="form-control col-md-12" type="text" placeholder="Press 'Enter' to send a message"/>
-                        <!--<input class="col-md-1 btn btn-primary col-md-3" id="chat-message-submit" type="button" value="Send"/>-->
-                        {% else %}
-                        <input id="chat-message-input" class="form-control col-md-12" type="text" size="2000" placeholder="Please log in to join the chat." disabled/>
-                        {% endif %}
+                <div class="col-md-6" id="chat-log">
+                    <div id="chat-log-window" class="chat-log-wrapper pre-scrollable">
+                        <div class="row" id="chat-log-div">
+                        {% for msg in chat_history %}
+                            <div class="chat-line col-md-11">
+                                    <a class="msg-user" href="{% url 'index' %}user/{{msg.user}}">{{msg.user}}</a><span class="msg-sep pr-1">:</span><span class="msg-text">{{msg.message_text | urlize}}</span>
+                            </div>
+                        {% endfor %}
+                        </div>
+                    </div>
+                    <div class="chat-input-wrapper">
+                        <div class="row">
+                            {% if user.is_authenticated %}
+                            <input id="chat-message-input" class="form-control col-md-12" type="text" placeholder="Press 'Enter' to send a message"/>
+                            <!--<input class="col-md-1 btn btn-primary col-md-3" id="chat-message-submit" type="button" value="Send"/>-->
+                            {% else %}
+                            <input id="chat-message-input" class="form-control col-md-12" type="text" size="2000" placeholder="Please log in to join the chat." disabled/>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>

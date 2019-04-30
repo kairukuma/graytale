@@ -82,7 +82,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         else:
             n = Notification.objects.create(name=topic.name,topic=topic)
 
-        n.users.set(User.objects.filter(groups__name='admin'))
+        n.users.set(User.objects.filter(groups__name='admin').exclude(id=self.user.id))
         n.save()
 
         # send_admin_notifications()
