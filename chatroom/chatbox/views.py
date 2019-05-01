@@ -18,6 +18,7 @@ from datetime import datetime
 from webpush import send_group_notification,send_user_notification
 
 import json, time
+import numpy as np
 
 # Create your views here.
 
@@ -52,7 +53,7 @@ def room_data(request, room_name, post_id):
     else:
         return subscriptions, None, None
 
-    messages = reversed(Message.objects.filter(topic=topic, post_id=post_id).order_by('-datetime')[:20])
+    messages = reversed(Message.objects.filter(topic=topic, post_id=post_id).order_by('-datetime')[:25])
 
     return subscriptions, topic, messages
 
@@ -154,17 +155,29 @@ def post_view(request, room_name='graytale', post_id='0'):
         'post': post,
     })
 
-def user(request, user_name):
+def user(request, user_name, msg_page=1, post_page=1):
+    mpg = int(msg_page)
+    ppg = int(post_page)
+
     u = User.objects.get(username=user_name)
-    messages = Message.objects.filter(user=u).order_by('datetime')
-    posts = Post.objects.filter(user=u).order_by('datetime')
+    messages = Message.objects.filter(user=u).order_by('-datetime')
+    posts = Post.objects.filter(user=u).order_by('-datetime')
     
+    message_range = np.ones((8,),dtype=int) * -1
+    message_indices = np.arange(np.ceil(messages.count() / 20).astype(int))[:8]
+    message_range[message_indices] = message_indices + 1 # NEED TO IMPLEMENT PAGINATION FOR > 160 messages
+
     return render(request,'chat/user.html', {
         'user' : u,
-        'messages' : messages,
-        'posts' : posts,
+        'messages' : messages[(mpg-1)*20:mpg*20],
+        'posts' : posts[:20],
+        'message_page': mpg,
+        'post_page': ppg,
+        'topics' : get_topics(request),
         'room_name' : 'Topic',
         'subscribable': False,
+        'message_range': message_range,
+        'post_range': range(0,posts.count(),20),
     })
 
 def create(request):

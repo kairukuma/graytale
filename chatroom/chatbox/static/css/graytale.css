@@ -1,0 +1,40 @@
+html {
+    height: 100%;
+}
+
+body {
+    background-color: rgb(50,50,50) !important;
+    color: white !important;
+}
+
+.gt-body {
+    overflow: hidden;
+}
+
+/* Links CSS */
+
+.graytale-link {
+    color: rgb(140,180,240);
+    transition: text-shadow 0.2s linear;
+}
+
+.graytale-link:hover {
+    color: rgb(140,180,240);
+    text-decoration: none;
+    text-shadow: 0 0 0.5em rgb(175,210,255), 0 0 0.1em white;
+    transition: text-shadow 0.2s linear;
+}
+
+.graytale-link.post-topic {
+    color: rgb(175,210,255);
+}
+
+/* id-specific CSS */
+#graytale-navbar {
+    background-color: rgb(15,15,15);
+    height: 5.5vh;
+}
+
+#content {
+    padding-left: 72px;
+}

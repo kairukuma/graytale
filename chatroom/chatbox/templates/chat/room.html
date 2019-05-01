@@ -10,48 +10,49 @@
 {% endblock site_head %}
 
 {% block content %}
-        
             <div class="col-md-12" id="content">
                 <div class="row">
-                    <div class="posts col-md-6">
-                        {% include "chat/navbar.html" %}
+                    {% include "chat/navbar.html" %}
+                </div>
+                <div class="row">
+                    <div class="posts col-md-8">
                         <div id="posts-window" class="posts-wrapper pre-scrollable">
                             {% for post in posts %}
-                                <div class="gt-post border rounded py-3 px-4">
+                                <div class="gt-post border border-dark rounded py-3 px-4">
                                     <div class="row">
                                         <div class="col-md-1 my-auto">
                                             <a href="{% url 'index' %}g/{{post.topic}}/{{post.id}}" class="text-secondary"><i class="fas fa-chevron-right fa-2x"></i></a>
                                         </div>
                                         <div class="gt-post-details col-md-11">
                                             <div class="gt-post-link">
-                                                <a href="{{post | validate_post_url}}" target="{{post | validate_post_external}}">{{post.title}}</a>
+                                                <a class="graytale-link" href="{{post | validate_post_url}}" target="{{post | validate_post_external}}">{{post.title}}</a>
                                             </div>
-                                            Submitted by <a class="text-muted" href="{% url 'index' %}user/{{post.user}}">{{post.user}}</a> to <a class="text-muted" href="{% url 'index' %}g/{{post.topic}}">{{post.topic}}</a>
+                                            Submitted by <a class="graytale-link" href="{% url 'index' %}user/{{post.user}}">{{post.user}}</a> to <a class="graytale-link post-topic" href="{% url 'index' %}g/{{post.topic}}">{{post.topic}}</a>
                                         </div>
                                     </div>
                                 </div>
                             {% endfor %}
                         </div>
                     </div>
-                    <div class="col-md-6" id="chat-log">
-                        <div id="chat-log-window" class="chat-log-wrapper pre-scrollable">
+                    <div class="col-md-4 p-0" id="chat-log">
+                        <div id="chat-log-window" class="chat-log-wrapper">
                             <div class="row" id="chat-log-div">
                             {% for msg in chat_history %}
-                                <div class="chat-line col-md-11">
-                                    <a class="msg-user" href="{% url 'index' %}user/{{msg.user}}">{{msg.user}}</a><span class="msg-sep pr-1">:</span><span class="msg-text">{{msg.message_text | urlize}}</span>
+                                <div class="chat-line col-md-12">
+                                    <a class="graytale-link msg-user" href="{% url 'index' %}user/{{msg.user}}">{{msg.user}}</a><span class="msg-sep pr-1">:</span><span class="msg-text">{{msg.message_text | urlize}}</span>
                                     <!--<span class="msg-date-time float-right">{{msg.year}}-{{msg.month}}-{{msg.day}} {{msg.hour}}:{{msg.minute}}:{{msg.second}}</span>-->
                                 </div>
                             {% endfor %}
                             </div>
-                        </div>
-                        <div class="chat-input-wrapper">
-                            <div class="row">
-                                {% if user.is_authenticated %}
-                                <input id="chat-message-input" class="form-control col-md-12" type="text" placeholder="Press 'Enter' to send a message"/>
-                                <!--<input class="col-md-1 btn btn-primary col-md-3" id="chat-message-submit" type="button" value="Send"/>-->
-                                {% else %}
-                                <input id="chat-message-input" class="form-control col-md-12" type="text" size="2000" placeholder="Please log in to join the chat." disabled/>
-                                {% endif %}
+                            <div class="chat-input-wrapper">
+                                <div class="row">
+                                    {% if user.is_authenticated %}
+                                    <input id="chat-message-input" class="form-control col-md-12" type="text" placeholder="Press 'Enter' to send a message"/>
+                                    <!--<input class="col-md-1 btn btn-primary col-md-3" id="chat-message-submit" type="button" value="Send"/>-->
+                                    {% else %}
+                                    <input id="chat-message-input" class="form-control col-md-12" type="text" size="2000" placeholder="Please log in to join the chat." disabled/>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -1,18 +1,8 @@
-html {
-    height: 100%;
-}
-
-.gt-body {
-    overflow: hidden;
-}
-
 .chat-line {
-    border: 1px solid rgba(120,120,120,0.66);
-    border-radius: 4px;
     width: auto;
 
-    margin: 8px 0 8px 16px;
-    padding: 8px;
+    margin: 0px 0 0px 16px;
+    padding: 10px 8px 10px 8px;
 }
 
 .gt-body {
@@ -28,14 +18,21 @@ html {
     max-height: 70vh !important;
 }
 
+/* Chat box CSS */
+
 .chat-log-wrapper {
-    min-height: 90vh;
     overflow-x: hidden !important;
+    overflow-y: scroll;
+}
+
+#chat-log-window {
+    height: 94.5vh;
+    padding-bottom: 12px;
 }
 
 .chat-input-wrapper {
     padding: 1vh 2vw 0 2vw;
-    min-height: 10vh;
+    /* min-height: 10vh; */
 }
 
 .subbed {
@@ -65,25 +62,13 @@ html {
     background-color: rgb(175,175,175);
 }
 
-#content {
-    padding-left: 72px;
-}
-
 #chat-log-div {
     min-height: 100%;
 }
-/*
-#chat-message-input {
-    position:relative;
-    top:0px;
-    height: 4vh;
-    width: 90%;
-}
 
-#chat-message-submit {
-    height: 5vh;
-    width: 10%;
-}*/
+#chat-log-div .chat-line:nth-child(even) {
+    background-color: rgb(75,75,75)
+}
 
 /* Scrollbar */
 /* width */
@@ -93,16 +78,16 @@ html {
   
 /* Track */
 ::-webkit-scrollbar-track {
-    background: #f1f1f1; 
+    background: #2f2f2f; 
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
     border-radius: 8px;
-    background: #888; 
+    background: #ccc; 
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-    background: #555; 
+    background: #eee; 
 }
