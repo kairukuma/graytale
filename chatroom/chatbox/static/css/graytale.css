@@ -2,19 +2,6 @@ html {
     height: 100%;
 }
 
-a {
-    color: rgb(140,180,240) !important;
-    text-decoration: none;
-    transition: text-shadow 0.2s linear;
-}
-
-a:hover {
-    color: rgb(140,180,240);
-    text-decoration: none !important;
-    text-shadow: 0 0 0.05em rgb(165,200,245), 0 0 0.025em rgb(165,200,245);
-    transition: text-shadow 0.1s linear;
-}
-
 body {
     background-color: rgb(50,50,50) !important;
     color: white !important;
@@ -46,6 +33,12 @@ body {
 
 .graytale-card {
     background-color: rgba(245,245,245,0.2) !important;
+}
+
+.user-message {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
 }
 
 /* id-specific CSS */

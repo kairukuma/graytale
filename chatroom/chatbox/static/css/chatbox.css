@@ -1,7 +1,19 @@
 .chat-line {
     width: auto;
-
     padding: 10px 8px 10px 8px;
+}
+
+.chat-line a {
+    color: rgb(140,180,240) !important;
+    text-decoration: none;
+    transition: text-shadow 0.2s linear;
+}
+
+.chat-line a:hover {
+    color: rgb(140,180,240);
+    text-decoration: none !important;
+    text-shadow: 0 0 0.05em rgb(165,200,245), 0 0 0.025em rgb(165,200,245);
+    transition: text-shadow 0.1s linear;
 }
 
 .profile-icon {
