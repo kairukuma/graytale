@@ -1,17 +1,5 @@
 <script>
 
-    $('#modal').on('show.bs.modal', function (event) {
-        var modal = $(this)
-        var button = $(event.relatedTarget)
-        var url = button.attr('href');
-        $.ajax({
-            url: url,
-            context: document.body
-        }).done(function(response) {
-            modal.html(response);
-        });
-    })
-
     function sendMessage() {
         var messageInputDom = document.querySelector('#chat-message-input');
         var message = messageInputDom.value;
@@ -48,23 +36,38 @@
         objDiv.scrollTop = objDiv.scrollHeight;
     }
 
-    function createChatLine(m,username) {
+    function createChatLine(m,username,profile_pic) {
         var chatline_div = $('<div/>', {
-            class : 'chat-line col-md-11',
+            class : 'chat-line row',
         }).appendTo($('#chat-log-div'));
+
+        var chatline_wrapper = $('<div/>', {
+            class: 'col-md-12',
+        }).appendTo(chatline_div);
+
+        var chatline_plink = $('<a/>', {
+            class: "profile-link text-white",
+            href: "/user/"+username,
+        }).appendTo(chatline_wrapper);
+
+        var chatline_pp = profile_pic ? $('<img>', {
+            class: 'profile-icon',
+            src: profile_pic,
+        }).appendTo(chatline_plink) : $('<i class="fas fa-user profile-icon"></i>').appendTo(chatline_plink);
+        chatline_wrapper.append(" ")
 
         var chatline_user = $('<a/>', {
             href: '{% url "index" %}user/'+username,
-            class: 'msg-user',
-        }).appendTo(chatline_div);
+            class: 'graytale-link msg-user',
+        }).appendTo(chatline_wrapper);
 
         var chatline_sep = $('<span/>', {
-            class: 'msg-sep pr-1',
-        }).appendTo(chatline_div);
+            class: 'msg-sep px-1',
+        }).appendTo(chatline_wrapper);
 
         var chatline_txt = $('<span/>',{
             class: 'msg-text'
-        }).appendTo(chatline_div);
+        }).appendTo(chatline_wrapper);
 
         chatline_user.text(username);
         chatline_sep.text(':');
@@ -95,8 +98,9 @@
             case 'chat_message':
             var message = data['message'];
             var username = data['username'];
+            var profile_pic = data['profile_pic'];
 
-            createChatLine(message,username);
+            createChatLine(message,username,profile_pic);
             break;
             case 'notification':
             

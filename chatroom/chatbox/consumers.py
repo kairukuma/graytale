@@ -115,6 +115,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'type': 'chat_message',
             'message': message,
             'username': username,
+            'profile_pic': self.user.profile.profile_picture.url,
         }))
 
     async def notification(self, event):

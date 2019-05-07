@@ -2,31 +2,50 @@ html {
     height: 100%;
 }
 
+a {
+    color: rgb(140,180,240) !important;
+    text-decoration: none;
+    transition: text-shadow 0.2s linear;
+}
+
+a:hover {
+    color: rgb(140,180,240);
+    text-decoration: none !important;
+    text-shadow: 0 0 0.05em rgb(165,200,245), 0 0 0.025em rgb(165,200,245);
+    transition: text-shadow 0.1s linear;
+}
+
 body {
     background-color: rgb(50,50,50) !important;
     color: white !important;
-}
-
-.gt-body {
-    overflow: hidden;
+    height: 100%;
 }
 
 /* Links CSS */
 
 .graytale-link {
-    color: rgb(140,180,240);
+    color: rgb(140,180,240) !important;
+    text-decoration: none;
     transition: text-shadow 0.2s linear;
 }
 
 .graytale-link:hover {
     color: rgb(140,180,240);
-    text-decoration: none;
-    text-shadow: 0 0 0.5em rgb(175,210,255), 0 0 0.1em white;
-    transition: text-shadow 0.2s linear;
+    text-decoration: none !important;
+    text-shadow: 0 0 0.05em rgb(165,200,245), 0 0 0.025em rgb(165,200,245);
+    transition: text-shadow 0.1s linear;
 }
 
 .graytale-link.post-topic {
     color: rgb(175,210,255);
+}
+
+.graytale-form-wrapper {
+    border-left: 2px solid white;
+}
+
+.graytale-card {
+    background-color: rgba(245,245,245,0.2) !important;
 }
 
 /* id-specific CSS */
@@ -37,4 +56,45 @@ body {
 
 #content {
     padding-left: 72px;
+}
+
+#posts-window {
+    height: 94.5vh !important;
+    overflow-y: scroll;
+}
+
+.grid-item {
+    width: 33.3333%;
+}
+
+.grid-item img {
+    border-radius: 8px;
+}
+
+.grid-item-content-wrapper {
+    border-radius: 8px;
+    background-color: rgba(245,245,245,0.2);
+}
+
+
+/* Scrollbar */
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+  
+/* Track */
+::-webkit-scrollbar-track {
+    background: #2f2f2f; 
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background: #ccc; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #eee; 
 }

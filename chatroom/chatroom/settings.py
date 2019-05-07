@@ -25,7 +25,7 @@ SECRET_KEY = 'g409%6v1*kd1^p^i*e0j%q6=kbu^%e)7%bldu29q_&a=)zlvg_'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['979269c1.ngrok.io','localhost','127.0.0.1']
+ALLOWED_HOSTS = ['91062c61.ngrok.io','localhost','127.0.0.1']
 
 
 # Application definition
@@ -119,6 +119,11 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Media files
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+IMAGE_MAX_WIDTH = 300
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/

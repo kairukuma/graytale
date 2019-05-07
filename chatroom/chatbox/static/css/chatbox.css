@@ -1,8 +1,13 @@
 .chat-line {
     width: auto;
 
-    margin: 0px 0 0px 16px;
     padding: 10px 8px 10px 8px;
+}
+
+.profile-icon {
+    max-height: 24px;
+    width: 24px;
+    text-align:center;
 }
 
 .gt-body {
@@ -12,10 +17,6 @@
 .posts-text {
     max-height: 70vh !important;
     height: 70vh !important;
-}
-
-.posts-wrapper {
-    max-height: 70vh !important;
 }
 
 /* Chat box CSS */
@@ -33,6 +34,16 @@
 .chat-input-wrapper {
     padding: 1vh 2vw 0 2vw;
     /* min-height: 10vh; */
+}
+
+.profile-link:hover {
+    text-decoration: none;
+}
+
+.msg-text {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
 }
 
 .subbed {
@@ -68,26 +79,4 @@
 
 #chat-log-div .chat-line:nth-child(even) {
     background-color: rgb(75,75,75)
-}
-
-/* Scrollbar */
-/* width */
-::-webkit-scrollbar {
-    width: 10px;
-}
-  
-/* Track */
-::-webkit-scrollbar-track {
-    background: #2f2f2f; 
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-    border-radius: 8px;
-    background: #ccc; 
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-    background: #eee; 
 }

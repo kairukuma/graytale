@@ -13,6 +13,13 @@
     
         <div class="row" id="user-profile-wrapper">
             <div class="col-md-3" id="user-info">
+                <div id="profile-pic-wrapper" class="w-100 px-2 mb-5">
+                    {% if user.profile.profile_picture %}
+                    <img class="w-100" src="{{user.profile.profile_picture.url}}"/>
+                    {% else %}
+                    <i class="fa fa-user fa-5x w-100"></i>
+                    {% endif %}
+                </div>
                 <h5 class="font-weight-normal">User Info</h5>
                 <hr>
                 <div class="font-weight-normal">Joined {{user.date_joined|date:"M d, Y"}}</div>
@@ -27,21 +34,29 @@
                         <div class="font-weight-normal">{{message}}</div>
                     </div>
                     {% endfor %}
-                    <div class="row">
+                    <div class="row mt-3">
                         <div class="col-md-2">
-                            Prev
+                            {% if message_page > 1 %}
+                            <a class="graytale-link" href="{% url 'index' %}user/{{user}}/{{message_page|add:'-1'}}/{{post_page}}">Prev</a>
+                            {% else %}
+                            <div class="text-muted">Prev</div>
+                            {% endif %}
                         </div>
                         {% for i in message_range %}
                             {% if i > 0 %}
                             <div class="col-md-1">
-                                <a href="{% url 'index' %}user/{{user}}/{{i}}/{{post_page}}">{{i}}</a>
+                                <a class="graytale-link" href="{% url 'index' %}user/{{user}}/{{i}}/{{post_page}}">{{i}}</a>
                             </div>
                             {% else %}
                             <div class="col-md-1"></div>
                             {% endif %}
                         {% endfor %}
                         <div class="col-md-2">
-                            Next
+                            {% if message_page < num_msg_pages %}
+                            <a class="graytale-link" href="{% url 'index' %}user/{{user}}/{{message_page|add:'1'}}/{{post_page}}">Next</a>
+                            {% else %}
+                            <div class="text-muted">Next</div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -56,6 +71,31 @@
                     <a href="{% url 'index' %}g/{{post.topic}}/{{post.id}}">{{post.title}}</a>
                 </div>
                 {% endfor %}
+                <div class="row mt-3">
+                    <div class="col-md-2">
+                        {% if post_page > 1 %}
+                        <a class="graytale-link" href="{% url 'index' %}user/{{user}}/{{message_page}}/{{post_page|add:'-1'}}">Prev</a>
+                        {% else %}
+                        <div class="text-muted">Prev</div>
+                        {% endif %}
+                    </div>
+                    {% for i in post_range %}
+                        {% if i > 0 %}
+                        <div class="col-md-1">
+                            <a class="graytale-link" href="{% url 'index' %}user/{{user}}/{{message_page}}/{{i}}">{{i}}</a>
+                        </div>
+                        {% else %}
+                        <div class="col-md-1"></div>
+                        {% endif %}
+                    {% endfor %}
+                    <div class="col-md-2">
+                        {% if post_page >= num_pst_pages %}
+                        <div class="text-muted">Next</div>
+                        {% else %}
+                        <a class="graytale-link" href="{{message_page|add:'1'}}">Next</a>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
     
         </div>

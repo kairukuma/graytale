@@ -18,6 +18,7 @@ from datetime import datetime
 from webpush import send_group_notification,send_user_notification
 
 import json, time
+import metadata_parser as mdp
 import numpy as np
 
 # Create your views here.
@@ -163,21 +164,30 @@ def user(request, user_name, msg_page=1, post_page=1):
     messages = Message.objects.filter(user=u).order_by('-datetime')
     posts = Post.objects.filter(user=u).order_by('-datetime')
     
-    message_range = np.ones((8,),dtype=int) * -1
-    message_indices = np.arange(np.ceil(messages.count() / 20).astype(int))[:8]
+    num_msg_pages = np.ceil(messages.count() / 20).astype(int)
+    num_pst_pages = np.ceil(posts.count() / 20).astype(int)
+
+    message_range = np.zeros((8,),dtype=int)
+    message_indices = np.arange(num_msg_pages)[:8]
     message_range[message_indices] = message_indices + 1 # NEED TO IMPLEMENT PAGINATION FOR > 160 messages
+
+    post_range = np.zeros((8,),dtype=int)
+    post_indices = np.arange(np.ceil(posts.count() / 20).astype(int))[:8]
+    post_range[post_indices] = post_indices + 1 # NEED TO IMPLEMENT PAGINATION FOR > 160 messages
 
     return render(request,'chat/user.html', {
         'user' : u,
         'messages' : messages[(mpg-1)*20:mpg*20],
-        'posts' : posts[:20],
+        'posts' : posts[(ppg-1)*20:ppg*20],
         'message_page': mpg,
         'post_page': ppg,
         'topics' : get_topics(request),
         'room_name' : 'Topic',
         'subscribable': False,
         'message_range': message_range,
-        'post_range': range(0,posts.count(),20),
+        'post_range': post_range,
+        'num_msg_pages': num_msg_pages,
+        'num_pst_pages': num_pst_pages,
     })
 
 def create(request):
@@ -192,11 +202,18 @@ def create(request):
         if form.is_valid():
 
             dt = datetime.now()
-
+            url = request.POST['url']
+            try:
+                metadata = mdp.MetadataParser(url=url,search_head_only=True)
+                metaimage = metadata.get_metadata_link('image')
+            except:
+                metaimage = None
+        
             p = Post(
-                url = request.POST['url'],
+                url = url,
                 text = request.POST['text'],
                 title = request.POST['title'],
+                metaimage = metaimage,
                 topic = Topic.objects.get(name=request.POST['topic']),
                 datetime = time.mktime(dt.timetuple()),
                 user = request.user,
@@ -204,12 +221,16 @@ def create(request):
 
             p.save()
 
-            sendpush_post(request)
+            # sendpush_post(request)
 
             return HttpResponseRedirect(reverse_lazy('index'))
     else:
         form = Create()
-    return render(request, 'create.html', {'form': form})
+
+    return render(request, 'create.html', {
+        'form': form,
+        'topics': get_topics(request),
+    })
 
 @require_POST
 @csrf_exempt

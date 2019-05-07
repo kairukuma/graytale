@@ -1,5 +1,4 @@
 {% load static %}
-{% load webpush_notifications %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,13 +10,12 @@
     <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
     <script src="{% static 'js/popper.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'js/chatbox-gt.js' %}"></script>
+    <script src="{% static 'js/masonry.min.js' %}"></script>
+    <script src="{% static 'js/graytale.js' %}"></script>
     <link rel="stylesheet" href="{% static 'css/graytale.css' %}">
     <link rel="stylesheet" href="{% static 'css/sidebar.css'%}">
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/fontawesome.css' %}">
-
-    {% webpush_header %}
 
     {% block site_head %}
     {% endblock site_head %}
@@ -25,12 +23,12 @@
 
 <body>
     <div class="modal fade" id="modal">
-        <div class="modal-dialog">
+        <div class="modal-dialog" role="document">
             
         </div>
     </div>
 
-    <div class="gt-body container-fluid">
+    <div class="gt-body container-fluid h-100">
         <div class="row h-100">
             {% include "chat/sidebar.html" %}
             {% block content %}

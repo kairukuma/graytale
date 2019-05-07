@@ -1,8 +1,31 @@
 from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import User
 
 from datetime import datetime
 import time
+from PIL import Image
+
+# Model helper functions
+def validate_size(f):
+    filesize = f.size
+
+    if filesize > 2097152:
+        raise ValidationError("The maximum file size that can be uploaded is 2MB")
+    else:
+        return f
+
+def autoresize_image(image_path):
+    image = Image.open(image_path)
+    width = image.size[0]
+    
+    if width > settings.IMAGE_MAX_WIDTH:
+        height = image.size[1]
+        reduce_factor = settings.IMAGE_MAX_WIDTH / float(width)
+        reduced_width = int(width * reduce_factor)
+        reduced_height = int(height * reduce_factor)
+        image = image.resize((reduced_width, reduced_height), Image.ANTIALIAS)
+        image.save(image_path)
 
 # Create your models here.
 class Topic(models.Model):
@@ -15,6 +38,7 @@ class Post(models.Model):
 
     # username = models.CharField(max_length=32,default='user')
     url = models.URLField(max_length=250)
+    metaimage = models.URLField(max_length=500,blank=True,null=True)
     text = models.TextField(blank=True,max_length=10000)
     title = models.CharField(max_length=64, default='')
 
@@ -52,4 +76,13 @@ class Notification(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     #notifications = models.ManyToManyField(Notification)
+    profile_picture = models.ImageField(blank=True,null=True,validators=[validate_size])
     subscriptions = models.ManyToManyField(Topic)
+
+    def __str__(self):
+        return "%s's profile" % self.user.username
+
+    def save(self, *args, **kwargs):
+        super(Profile, self).save(*args, **kwargs)
+        if self.profile_picture:
+            autoresize_image(self.profile_picture.path)

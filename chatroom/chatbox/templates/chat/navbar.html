@@ -2,7 +2,7 @@
 <nav id="graytale-navbar" class="navbar navbar-expand-lg navbar-dark flew-grow-1 sticky-top nav-fill w-100">
     <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-            <a class="navbar-brand mr-auto" href="{% url 'index' %}">Gray Tale</a>
+            <a class="navbar-brand mr-auto ml-3" href="{% url 'index' %}">Gray Tale</a>
         </li>
         <span id="navbar-spacer" class="ml-2"></span>
         <li class="nav-item dropdown">
@@ -38,7 +38,7 @@
     <ul class="navbar-nav ml-auto">
         {% if user.is_authenticated %}
         <li class="nav-item my-auto mx-2">
-            <span>Hi, <a href="{% url 'index' %}user/{{user}}" class=>{{ user }}</a>!</span>
+            <span>Hi, <a href="{% url 'index' %}user/{{user}}" class="graytale-link">{{ user }}</a>!</span>
         </li>
         <li class="nav-item my-auto">
             <a href="{% url 'index' %}user/{{user}}" class="nav-link">Profile</a>
