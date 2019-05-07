@@ -17,7 +17,7 @@
                 </div>
                 <div class="row">
                     <div class="posts col-md-8">
-                        <div id="posts-window" class="grid">
+                        <div id="posts-window" class="grid invisible">
                             {% for post in posts %}
                             <div class="grid-item">
                                 <div class="grid-item-content-wrapper m-2">
@@ -57,7 +57,7 @@
                                             {% if msg.user.profile.profile_picture %}
                                             <img class="profile-icon" src="{{msg.user.profile.profile_picture.url}}"/>
                                             {% else %}
-                                            <i class="fas fa-user profile-icon"></i>
+                                            <i class="fas fa-user profile-icon text-white"></i>
                                             {% endif %}
                                         </a>
                                         <a class="graytale-link msg-user" href="{% url 'index' %}user/{{msg.user}}">{{msg.user}}</a><span class="msg-sep px-1">:</span><span class="msg-text">{{msg.message_text | urlize}}</span>

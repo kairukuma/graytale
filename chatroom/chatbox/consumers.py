@@ -115,7 +115,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'type': 'chat_message',
             'message': message,
             'username': username,
-            'profile_pic': self.user.profile.profile_picture.url,
+            'profile_pic': self.user.profile.profile_picture.url if self.user.profile.profile_picture else None,
         }))
 
     async def notification(self, event):
@@ -125,59 +125,3 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'type': 'notification',
             'room_name' : room_name,
         }))
-
-"""class NotificationConsumer(AsyncWebsocketConsumer):
-
-    async def connect(self):
-        self.user = self.scope['user']
-        #self.room_name = self.scope['url_route']['kwargs']['room_name']
-        #self.room_group_name = 'chat_%s' % self.room_name
-        self.post_id = self.scope['url_route']['kwargs']['post_id'] if 'post_id' in self.scope['url_route']['kwargs'] else 0
-
-        # Join room group
-        await self.channel_layer.group_add(
-            'notifications',
-            self.channel_name
-        )
-
-        await self.accept()
-
-    async def disconnect(self, close_code):
-        # Leave room group
-        await self.channel_layer.group_discard(
-            'notifications',
-            self.channel_name
-        )
-
-    # Receive message from WebSocket
-    async def receive(self, text_data):
-
-        text_data_json = json.loads(text_data)
-        message = text_data_json['message']
-
-        if len(self.user.username) == 0 or len(message.strip()) == 0:
-            return
-
-        print('notification trigger')
-
-        # Send message to room group
-        await self.channel_layer.group_send(
-            'notifications',
-            {
-                'type': 'chat_message',
-                'message': message,
-                'username': self.user.username,
-            }
-        )
-
-    # Receive message from room group
-    async def chat_message(self, event):
-        print('notification')
-        message = event['message']
-        username = event['username']
-
-        # Send message to WebSocket
-        await self.send(text_data=json.dumps({
-            'message': message,
-            'username': username,
-        }))"""
