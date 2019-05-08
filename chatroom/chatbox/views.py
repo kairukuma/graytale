@@ -25,6 +25,9 @@ import numpy as np
 
 """ Views Classes """
 
+class ImageUploadForm(forms.Form):
+    image = forms.ImageField()
+
 class Register(generic.CreateView):
     form_class = UserCreationForm
     success_url = reverse_lazy('index')
@@ -175,8 +178,17 @@ def user(request, user_name, msg_page=1, post_page=1):
     post_indices = np.arange(np.ceil(posts.count() / 20).astype(int))[:8]
     post_range[post_indices] = post_indices + 1 # NEED TO IMPLEMENT PAGINATION FOR > 160 messages
 
+    if request.method == 'POST':
+        form = ImageUploadForm(request.POST, request.FILES)
+
+        if form.is_valid() and request.user == u:
+            image = form.cleaned_data['image']
+            u.profile.profile_picture.save(image.name,form.cleaned_data['image'])
+            u.save()
+
     return render(request,'chat/user.html', {
-        'user' : u,
+        'user' : request.user,
+        'profile': u,
         'messages' : messages[(mpg-1)*20:mpg*20],
         'posts' : posts[(ppg-1)*20:ppg*20],
         'message_page': mpg,

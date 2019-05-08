@@ -27,6 +27,12 @@ body {
     color: rgb(175,210,255);
 }
 
+/* Page CSS */
+
+.btn-file {
+    
+}
+
 .graytale-form-wrapper {
     border-left: 2px solid white;
 }
