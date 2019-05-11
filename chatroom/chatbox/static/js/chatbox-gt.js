@@ -5,4 +5,17 @@ $(document).ready(function() {
     })
 
     grid.removeClass('invisible');
+
+    $('.grid-item.image-post').mouseenter(function() {
+        var overlayTop = $(this).children('.grid-item-content-wrapper').children('.grid-item-overlay.top');
+        var overlayBottom = $(this).children('.grid-item-content-wrapper').children('.grid-item-overlay.bottom');
+
+        overlayTop.addClass('show');
+        overlayBottom.addClass('show');
+    });
+
+    $('.grid-item').mouseleave(function() {
+        var overlays = $(this).children('.grid-item-content-wrapper').children('.grid-item-overlay');
+        overlays.removeClass('show');
+    });
 });

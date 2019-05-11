@@ -1,0 +1,38 @@
+{% extends "chat/base.html" %}
+{% load static %}
+
+{% block meta %}
+    <meta name="modal-type" content="delete">
+{% endblock meta %}
+
+{% block content %}
+    <div class="container h-100" role="document">
+        <div class="row h-100 align-items-center">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 id="title" class="display-4 text-center">Confirm Deletion</h1>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="{% url 'index'%}g/{{post.topic}}/{{post.id}}/delete/" method="post" id="delete-form">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <div id="confirm-text" class="display-5 text-center my-5">
+                                    Are you sure you want to delete your post?
+                                </div>
+
+                                <div id="selections" class="text-center mx-auto">
+                                    <button type="submit" class="col-2 btn btn-primary mx-auto" name="yes_button" value="yes">Yes</button>
+                                    <button type="submit" class="col-2 btn btn-primary mx-auto" name="no_button" value="no">No</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    </div>
+{% endblock content %}

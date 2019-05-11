@@ -40,8 +40,7 @@ function subscribe(url) {
     });
 }
 
-function constructModal(modal, response) {
-    // R = $.parseHTML(response);
+function constructAuthModal(modal, response) {
     R = $(response);
     modalWrapper = $('<div/>', {
         class: 'modal-content px-5 py-3',
@@ -69,6 +68,48 @@ function constructModal(modal, response) {
     });
 
     form.appendTo(modalWrapper);
+}
+
+function constructDeleteModal(modal, response) {
+    R = $(response);
+
+    modalWrapper = $('<div/>', {
+        class: 'modal-content px-5 py-3',
+    }).appendTo(modal.children('.modal-dialog'));
+    
+    title = R.find('#title').text();
+    titleDiv = $('<div/>', {
+        class: 'modal-header',
+    }).appendTo(modalWrapper);
+    
+    titleHeader = $('<h5/>', {
+        class: 'modal-title text-dark',
+        text: title,
+    }).appendTo(titleDiv);
+
+    confirmText = R.find('#confirm-text').text;
+    
+    form = R.find('form');
+
+    form.find('#confirm-text').removeClass('display-5').removeClass('my-5').addClass('text-dark').addClass('my-3');
+    
+    form.appendTo(modalWrapper);
+
+    console.log(form.find('#confirm-text'));
+}
+
+function constructModal(modal, response) {
+    // R = $.parseHTML(response);
+    var parser = new DOMParser();
+    var doc = parser.parseFromString(response, "text/html");
+    var modalType = doc.querySelector('meta[name="modal-type"]')['content'];
+
+    switch (modalType) {
+        case 'delete':
+        constructDeleteModal(modal, response); break;
+        case 'auth':
+        constructAuthModal(modal, response); break;
+    }
 }
 
 $(document).ready(function() {

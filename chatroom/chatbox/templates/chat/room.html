@@ -19,27 +19,40 @@
                     <div class="posts col-md-8">
                         <div id="posts-window" class="grid invisible">
                             {% for post in posts %}
-                            <div class="grid-item">
+                            <div class="grid-item {% if post.metaimage %}image-post{% else %}text-post{% endif %}">
                                 <div class="grid-item-content-wrapper m-2">
                                     {% if post.metaimage %}
+                                    <div class="grid-item-overlay top w-100">
+                                        {{post.title}}
+                                    </div>
+                                    <div class="grid-item-overlay bottom w-100">
+                                        {% if post.user == user %}
+                                        <div class="col-2">
+                                            <a class="text-white" href="{% url 'index' %}g/{{post.topic}}/{{post.id}}/edit"><i class="my-auto far fa-edit"></i></a>
+                                            <a data-toggle="modal" data-target="#modal" class="text-white" href="{% url 'index' %}g/{{post.topic}}/{{post.id}}/delete"><i class="my-auto fa fa-trash" aria-hidden="true"></i></a>
+                                        </div>
+                                        <div class="col-10">
+                                            <p class="my-auto">Submitted by <a class="graytale-link" href="{% url 'index' %}user/{{post.user}}">{{post.user}}</a> to <a class="graytale-link post-topic" href="{% url 'index' %}g/{{post.topic}}">{{post.topic}}</a></p>
+                                        </div>
+                                        {% else %}
+                                        <p class="m-auto">Submitted by <a class="graytale-link" href="{% url 'index' %}user/{{post.user}}">{{post.user}}</a> to <a class="graytale-link post-topic" href="{% url 'index' %}g/{{post.topic}}">{{post.topic}}</a></p>
+                                        {% endif %}
+                                    </div>
                                     <a href="{% url 'index' %}g/{{post.topic}}/{{post.id}}" class="text-secondary">
                                         <img class="w-100 mw-100 mh-100" src="{{post.metaimage}}"/>
                                     </a>
                                     {% else %}
-                                    <div class="p-5">
-                                        <div class="row">
-                                            <div class="col-md-2 my-auto">
-                                                <a href="{% url 'index' %}g/{{post.topic}}/{{post.id}}" class="text-light">
-                                                    <i class="fas fa-chevron-right fa-2x"></i>
-                                                </a>
-                                            </div>
-                                            <div class="gt-post-details col-md-10">
-                                                <div class="gt-post-link">
-                                                    <a class="graytale-link" href="{{post | validate_post_url}}" target="{{post | validate_post_external}}">{{post.title}}</a>
-                                                </div>
-                                                Submitted by <a class="graytale-link" href="{% url 'index' %}user/{{post.user}}">{{post.user}}</a> to <a class="graytale-link post-topic" href="{% url 'index' %}g/{{post.topic}}">{{post.topic}}</a>
-                                            </div>
+                                    <div class="col-md-1"></div>
+                                    <div class="col-md-1 my-auto">
+                                        <a href="{% url 'index' %}g/{{post.topic}}/{{post.id}}" class="text-light">
+                                            <i class="fas fa-chevron-right fa-2x"></i>
+                                        </a>
+                                    </div>
+                                    <div class="gt-post-details col-md-9">
+                                        <div class="gt-post-link">
+                                            <a class="graytale-link" href="{{post | validate_post_url}}" target="{{post | validate_post_external}}">{{post.title}}</a>
                                         </div>
+                                        Submitted by <a class="graytale-link" href="{% url 'index' %}user/{{post.user}}">{{post.user}}</a> to <a class="graytale-link post-topic" href="{% url 'index' %}g/{{post.topic}}">{{post.topic}}</a>
                                     </div>
                                     {% endif %}
                                 </div>

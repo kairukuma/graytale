@@ -8,6 +8,18 @@ body {
     height: 100%;
 }
 
+.display-5 {
+    font-size: 2.5rem;
+    font-weight: 300;
+    line-height: 1.2;
+}
+
+.display-6 {
+    font-size: 1.5rem;
+    font-weight: 300;
+    line-height: 1.2;
+}
+
 /* Links CSS */
 
 .graytale-link {
@@ -29,16 +41,55 @@ body {
 
 /* Page CSS */
 
-.btn-file {
-    
-}
-
 .graytale-form-wrapper {
     border-left: 2px solid white;
 }
 
 .graytale-card {
     background-color: rgba(245,245,245,0.2) !important;
+}
+
+.grid-item-overlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    height: 72px;
+
+    opacity: 0;
+    background-color: rgba(50,50,50,0.6);
+    transition: all 0.1s linear;
+}
+
+.grid-item-overlay.top {
+    top: 0;
+}
+
+.grid-item-overlay.bottom {
+    bottom: 0;
+}
+
+.grid-item-overlay.show {
+    opacity: 1;
+}
+
+.grid-item {
+    width: 33%;
+}
+
+.grid-item img {
+    border-radius: 8px;
+}
+
+.grid-item.text-post .grid-item-content-wrapper{
+    min-height: 240px;
+}
+
+.grid-item-content-wrapper {
+    border-radius: 8px;
+    background-color: rgba(245,245,245,0.2);
+    display: flex;
+    align-items: center;
 }
 
 .user-message {
@@ -60,19 +111,7 @@ body {
 #posts-window {
     height: 94.5vh !important;
     overflow-y: scroll;
-}
-
-.grid-item {
-    width: 33.3333%;
-}
-
-.grid-item img {
-    border-radius: 8px;
-}
-
-.grid-item-content-wrapper {
-    border-radius: 8px;
-    background-color: rgba(245,245,245,0.2);
+    overflow-x: hidden;
 }
 
 

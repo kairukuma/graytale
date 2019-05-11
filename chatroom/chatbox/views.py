@@ -36,7 +36,10 @@ class Register(generic.CreateView):
 class Create(forms.Form):
     title = forms.CharField(label='Title')
     topic = forms.CharField(label='Topic')
-    # url = forms.URLField(label='URL')
+    text = forms.CharField(label='Body')
+
+class Edit(forms.Form):
+    title = forms.CharField(label='Title')
     text = forms.CharField(label='Body')
 
 """ Assist Functions """
@@ -202,6 +205,60 @@ def user(request, user_name, msg_page=1, post_page=1):
         'num_pst_pages': num_pst_pages,
     })
 
+def edit_post_view(request, room_name, post_id):
+
+    post = Post.objects.get(id=post_id)
+
+    if request.user != post.user and not request.user.groups.filter(name__in=['admin']).exists():
+        raise Http404("Permission not granted to edit post.")
+        
+
+    if request.method == 'POST':
+        form = Edit(request.POST)
+        print(form,request.POST)
+        if form.is_valid():
+            url = request.POST['url']
+            try:
+                metadata = mdp.MetadataParser(url=url,search_head_only=True)
+                metaimage = metadata.get_metadata_link('image')
+            except:
+                metaimage = None
+        
+            post.url = url
+            post.text = request.POST['text']
+            post.title = request.POST['title']
+            post.metaimage = metaimage
+
+            post.save()
+            return HttpResponseRedirect(reverse_lazy('index'))
+    
+    form = Create()
+
+    return render(request,'edit.html', {
+        'form': form,
+        'post': post,
+        'topics': get_topics(request),
+    })
+
+def delete_post_view(request,room_name,post_id):
+    
+    post = Post.objects.get(id=post_id)
+
+    if request.user != post.user and not request.user.groups.filter(name__in=['admin']).exists():
+        raise Http404("Permission not granted to delete post.")
+
+    if request.method == 'POST':
+        if 'yes_button' in request.POST:
+            post.delete()
+            return HttpResponseRedirect(reverse_lazy('index'))
+        else:
+            return HttpResponseRedirect(reverse_lazy('index'))
+
+    return render(request,'delete.html', {
+        'post': post,
+        'topics': get_topics(request),
+    })
+
 def create(request):
 
     if request.user.id is None:
@@ -209,7 +266,6 @@ def create(request):
 
     if request.method == 'POST':
         form = Create(request.POST)
-        print(form.is_valid())
 
         if form.is_valid():
 
