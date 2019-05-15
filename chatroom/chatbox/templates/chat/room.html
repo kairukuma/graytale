@@ -21,7 +21,7 @@
                             {% for post in posts %}
                             <div class="grid-item {% if post.metaimage %}image-post{% else %}text-post{% endif %}">
                                 <div class="grid-item-content-wrapper m-2">
-                                    {% if post.metaimage %}
+                                    {% if post.metaimage %} <!-- If image post -->
                                     <div class="grid-item-overlay top w-100">
                                         {{post.title}}
                                     </div>
@@ -38,21 +38,40 @@
                                         <p class="m-auto">Submitted by <a class="graytale-link" href="{% url 'index' %}user/{{post.user}}">{{post.user}}</a> to <a class="graytale-link post-topic" href="{% url 'index' %}g/{{post.topic}}">{{post.topic}}</a></p>
                                         {% endif %}
                                     </div>
-                                    <a href="{% url 'index' %}g/{{post.topic}}/{{post.id}}" class="text-secondary">
+                                    <!--<a href="{% url 'index' %}g/{{post.topic}}/{{post.id}}" class="text-secondary">-->
+                                    <a href="{{post.url}}" target="_blank" class="text-secondary">
                                         <img class="w-100 mw-100 mh-100" src="{{post.metaimage}}"/>
                                     </a>
-                                    {% else %}
-                                    <div class="col-md-1"></div>
-                                    <div class="col-md-1 my-auto">
-                                        <a href="{% url 'index' %}g/{{post.topic}}/{{post.id}}" class="text-light">
-                                            <i class="fas fa-chevron-right fa-2x"></i>
-                                        </a>
-                                    </div>
-                                    <div class="gt-post-details col-md-9">
-                                        <div class="gt-post-link">
-                                            <a class="graytale-link" href="{{post | validate_post_url}}" target="{{post | validate_post_external}}">{{post.title}}</a>
+                                    {% else %} <!-- Else text post -->
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="gt-post-link px-4 pt-4 align-middle">
+                                                <a class="graytale-link" href="{{post | validate_post_url}}" target="{{post | validate_post_external}}">{{post.title}}</a>
+                                            </div>
                                         </div>
-                                        Submitted by <a class="graytale-link" href="{% url 'index' %}user/{{post.user}}">{{post.user}}</a> to <a class="graytale-link post-topic" href="{% url 'index' %}g/{{post.topic}}">{{post.topic}}</a>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="px-4 my-4 gt-post-text">
+                                                {{post.text}}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="px-4 pb-4">
+                                                Submitted by <a class="graytale-link" href="{% url 'index' %}user/{{post.user}}">{{post.user}}</a> to <a class="graytale-link post-topic" href="{% url 'index' %}g/{{post.topic}}">{{post.topic}}</a>
+                                                <div class="float-right">
+                                                    <a class="text-white" href="{% url 'index' %}g/{{post.topic}}/{{post.id}}/"><i class="fas fa-comments"></i></i></a>
+                                                    {% if post.user == user %}
+                                                    <a class="text-white" href="{% url 'index' %}g/{{post.topic}}/{{post.id}}/edit"><i class="my-auto far fa-edit"></i></a>
+                                                    <a data-toggle="modal" data-target="#modal" class="text-white" href="{% url 'index' %}g/{{post.topic}}/{{post.id}}/delete"><i class="my-auto fa fa-trash" aria-hidden="true"></i></a>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     {% endif %}
                                 </div>

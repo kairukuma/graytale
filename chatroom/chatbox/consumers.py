@@ -77,12 +77,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
         m.save()
 
-        if Notification.objects.filter(topic=topic).exists():
-            n = Notification.objects.get(topic=topic)
+        if Notification.objects.filter(topic=topic, post=self.post).exists():
+            n = Notification.objects.get(topic=topic, post=self.post)
         else:
-            n = Notification.objects.create(name=topic.name,topic=topic)
+            n = Notification.objects.create(name=topic.name,topic=topic,post=self.post)
 
-        n.users.set(User.objects.filter(groups__name='admin').exclude(id=self.user.id))
+        n.actor = self.user
+        
+        n.datetime = time.mktime(dt.timetuple())
+        n.text = message
+        n.users.set(User.objects.all())
         n.save()
 
         # send_admin_notifications()
@@ -93,6 +97,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             {
                 'type': 'chat_message',
                 'message': message,
+                'profile_pic': self.user.profile.profile_picture.url if self.user.profile.profile_picture else None,
                 'username': self.user.username,
             }
         )
@@ -109,13 +114,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def chat_message(self, event):
         message = event['message']
         username = event['username']
-
+        profile_pic = event['profile_pic']
+        
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
             'type': 'chat_message',
             'message': message,
             'username': username,
-            'profile_pic': self.user.profile.profile_picture.url if self.user.profile.profile_picture else None,
+            'profile_pic': profile_pic,
         }))
 
     async def notification(self, event):

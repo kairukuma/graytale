@@ -90,12 +90,14 @@ function constructDeleteModal(modal, response) {
     confirmText = R.find('#confirm-text').text;
     
     form = R.find('form');
-
     form.find('#confirm-text').removeClass('display-5').removeClass('my-5').addClass('text-dark').addClass('my-3');
-    
     form.appendTo(modalWrapper);
 
-    console.log(form.find('#confirm-text'));
+    nobutton = form.find('#nobutton');
+    nobuttonlink = nobutton.parent();
+
+    nobutton.appendTo(form.find('#selections'));
+    nobuttonlink.remove();
 }
 
 function constructModal(modal, response) {

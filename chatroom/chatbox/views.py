@@ -28,8 +28,24 @@ import numpy as np
 class ImageUploadForm(forms.Form):
     image = forms.ImageField()
 
+class GrayTaleUserCreationForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+
+    class Meta:
+        model = User
+        fields = ("username", "email", "password1", "password2")
+
+    def save(self, commit=True):
+        user = super(UserCreationForm, self).save(commit=False)
+        user.email = self.cleaned_data["email"]
+
+        if commit:
+            user.save()
+
+        return user
+
 class Register(generic.CreateView):
-    form_class = UserCreationForm
+    form_class = GrayTaleUserCreationForm
     success_url = reverse_lazy('index')
     template_name = 'registration/register.html'
 
@@ -70,10 +86,8 @@ def get_topics(request):
     for topic in Topic.objects.all():
         notified = False
 
-        if Notification.objects.filter(topic=topic).exists():
-            notification = Notification.objects.get(topic=topic)
-            if request.user in notification.users.all():
-                notified = True
+        if Notification.objects.filter(topic=topic,users__in=[request.user]).exists():
+            notified = True
 
         topics[topic.name] = {
             'topic': topic.name,
@@ -81,6 +95,17 @@ def get_topics(request):
         }
 
     return topics
+
+def clear_notification(request, room_name, post_id):
+    notification = None
+
+    currentTopic = Topic.objects.get(name=room_name)
+    
+    if Notification.objects.filter(topic=currentTopic,post=post_id,users__in=[request.user]).exists():
+    
+        notification = Notification.objects.get(topic=currentTopic,post=post_id,users__in=[request.user])
+        notification.users.remove(request.user)
+        notification.save()
 
 """ Views Functions """
 
@@ -104,14 +129,7 @@ def room(request, room_name='graytale'):
     subscribed = False if len(subscriptions) == 0 else len(subscriptions.filter(name=room_name)) > 0
 
     # If user is on a page, remove its notification for the user
-    notification = None
-
-    currentTopic = Topic.objects.get(name=room_name)
-    if Notification.objects.filter(topic=currentTopic).exists():
-        notification = Notification.objects.get(topic=currentTopic)
-        if request.user in notification.users.all():
-            notification.users.remove(request.user)
-            notification.save()
+    clear_notification(request, room_name, None)
 
     # If request method post
     if request.method == 'POST':
@@ -149,6 +167,7 @@ def post_view(request, room_name='graytale', post_id='0'):
         raise Http404("Page does not exist")
 
     subscribed = False if len(subscriptions) == 0 else len(subscriptions.filter(name=room_name)) > 0
+    clear_notification(request, room_name, int(post_id))
 
     return render(request,'chat/post.html', {
         'chat_history': messages,
@@ -157,7 +176,7 @@ def post_view(request, room_name='graytale', post_id='0'):
         'subscribed' : subscribed,
         'subscriptions': subscriptions,
         'subscribable': True,
-        'id': post_id,
+        'post_id': post_id,
         'topics': get_topics(request),
         'post': post,
     })
@@ -256,6 +275,7 @@ def delete_post_view(request,room_name,post_id):
 
     return render(request,'delete.html', {
         'post': post,
+        'redirect_url': reverse_lazy('index'),
         'topics': get_topics(request),
     })
 
@@ -299,6 +319,51 @@ def create(request):
         'form': form,
         'topics': get_topics(request),
     })
+
+def login_view(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse_lazy('index'))
+    else:
+        return login(request)
+
+def notifications(request):
+    if request.user.is_authenticated:
+
+        if request.method == 'POST':
+            topic_name = request.POST['topic']
+            if 'post_id' in request.POST:
+                post_id = request.POST['post_id']
+                notification = Notification.objects.filter(topic=Topic.objects.get(name=topic_name),post=Post.objects.get(id=post_id),users__in=[request.user])
+            else:
+                notification = Notification.objects.filter(topic=Topic.objects.get(name=topic_name),post=None,users__in=[request.user])
+            
+            if not notification.exists():
+                return JsonResponse(status=200,data={'notifications': []})
+
+            notification = notification[0]
+            notification.users.remove(request.user)
+
+        user_notifications = Notification.objects.filter(users__in=[request.user])
+        notification_data = []
+
+        for n in user_notifications:
+            data = {
+                'actor' : n.actor.id,
+                'datetime' : n.datetime,
+                'text' : n.text,
+                'topic' : n.topic.name,
+            }
+
+            if n.post is not None:
+                data['post'] = n.post.id
+            
+            notification_data.append(data)
+        
+        return JsonResponse(status=200,data={
+            "notifications": notification_data,
+        })
+    else:
+        raise Http404("User must be logged in!")
 
 @require_POST
 @csrf_exempt

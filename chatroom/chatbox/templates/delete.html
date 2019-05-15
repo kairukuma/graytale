@@ -25,7 +25,9 @@
 
                                 <div id="selections" class="text-center mx-auto">
                                     <button type="submit" class="col-2 btn btn-primary mx-auto" name="yes_button" value="yes">Yes</button>
-                                    <button type="submit" class="col-2 btn btn-primary mx-auto" name="no_button" value="no">No</button>
+                                    <a href="{{redirect_url}}">
+                                        <button type="button" id="nobutton" onclick="$('#modal').modal('hide');" class="col-2 btn btn-primary mx-auto" name="no_button" value="no">No</button>
+                                    </a>
                                 </div>
                             </div>
                         </form>

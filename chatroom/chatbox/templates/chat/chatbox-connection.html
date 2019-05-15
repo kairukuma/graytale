@@ -76,14 +76,55 @@
         scrollBottom();
     }
 
+    function refreshNotifications(response) {
+        var notifications = response.notifications;
+        
+        $('.notification-badge').addClass('hidden');
+
+        notifications.forEach(function(notification) {
+            if (notification.actor != parseInt('{{user.id}}')) {
+                var topic = notification.topic
+                $('#notification-badge-' + topic).removeClass('hidden');
+            }
+        });
+    }
+
+    function removeTopicNotification() {
+        $.ajax({
+            url: '/notifications/',
+            method: 'post',
+            data: {
+                csrfmiddlewaretoken: Cookies.get('csrftoken'),
+                topic : '{{room_name}}',
+                {% if post %}
+                post_id: parseInt('{{post_id}}'),
+                {% else %}
+                {% endif %}
+            }
+        }).done(function(response) {
+            refreshNotifications(response);
+        });
+    }
+
+    /* --------------------------------------------------------------------- */
+
     scrollBottom();
+    
+    /*$.ajax({
+        url: '/notifications/',
+        method: 'get',
+    }).done(function(response) {
+        refreshNotifications(response);
+    });*/
+
+    // removeTopicNotification();
 
     var roomName = {{ room_name_json }};
 
     {% if post %}
     var chatSocket = new WebSocket(
         'ws://' + window.location.host +
-        '/ws/' + roomName + '/{{id}}/');
+        '/ws/' + roomName + '/{{post_id}}/');
     {% else %}
     var chatSocket = new WebSocket(
         'ws://' + window.location.host +
@@ -104,11 +145,18 @@
             break;
             case 'notification':
             
-            if ('{{room_name}}' != data['room_name']) {
+            /*if ('{{room_name}}' != data['room_name']) {
                 $('#notification-badge-'+data['room_name']).removeClass('hidden');
-            }
+            }*/
 
-            sendAdminNotifications(data['room_name']);
+            // sendAdminNotifications(data['room_name']);
+
+            $.ajax({
+            url: '/notifications/',
+            method: 'get',
+            }).done(function(response) {
+                refreshNotifications(response);
+            });
 
             break;
             default:
@@ -116,6 +164,10 @@
         }
 
     };
+
+    $('#chat-log-window').mousedown(function() {
+        removeTopicNotification();
+    })
 
     chatSocket.onclose = function(e) {
         console.error('Chat socket closed unexpectedly');
@@ -125,6 +177,7 @@
     document.querySelector('#chat-message-input').onkeyup = function(e) {
         if (e.keyCode === 13) {  // enter, return
             sendMessage();
+            removeTopicNotification();
         }
     };
 

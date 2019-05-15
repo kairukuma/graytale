@@ -81,15 +81,42 @@ body {
     border-radius: 8px;
 }
 
-.grid-item.text-post .grid-item-content-wrapper{
+/*.grid-item.text-post .grid-item-content-wrapper{
     min-height: 240px;
-}
+}*/
 
 .grid-item-content-wrapper {
     border-radius: 8px;
     background-color: rgba(245,245,245,0.2);
-    display: flex;
-    align-items: center;
+}
+
+.gt-error {
+    color: rgb(255,100,100);
+}
+
+.gt-post-text {
+    max-height: 196px;
+    overflow-y: auto;
+}
+
+.gt-post-text {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.gt-post-text::-webkit-scrollbar-track { 
+    background: rgba(245,245,245,0.2);
+    border-radius: 8px;
+}
+
+.gt-post-text::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background: rgba(200,200,200,0.5);
+}
+
+/* Handle on hover */
+.gt-post-text::-webkit-scrollbar-thumb:hover {
+    background: rgba(225,225,225,0.75);
 }
 
 .user-message {

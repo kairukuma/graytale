@@ -67,11 +67,15 @@ class Message(models.Model):
 
 class Notification(models.Model):
     name = models.CharField(max_length=48,default='')
+    actor = models.ForeignKey(User, default=1, on_delete=models.DO_NOTHING, related_name='notification_actor')
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
-    users = models.ManyToManyField(User)
+    post = models.ForeignKey(Post, blank=True, null=True, on_delete=models.CASCADE)
+    users = models.ManyToManyField(User, related_name='notification_users')
+    text = models.CharField(max_length=80, default='')
+    datetime = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.name
+        return '%s-%d' % (self.topic,self.post.id) if self.post else self.topic.name
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
