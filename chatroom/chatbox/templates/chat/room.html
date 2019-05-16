@@ -18,25 +18,24 @@
                 <div class="row">
                     <div class="posts col-md-8">
                         <div id="posts-window" class="grid invisible">
-                            {% for post in posts %}
+                            {% for post_notification,post in posts %}
                             <div class="grid-item {% if post.metaimage %}image-post{% else %}text-post{% endif %}">
                                 <div class="grid-item-content-wrapper m-2">
                                     {% if post.metaimage %} <!-- If image post -->
                                     <div class="grid-item-overlay top w-100">
-                                        {{post.title}}
+                                        <div class="px-4 pt-2">{{post.title}}</div>
                                     </div>
-                                    <div class="grid-item-overlay bottom w-100">
-                                        {% if post.user == user %}
-                                        <div class="col-2">
-                                            <a class="text-white" href="{% url 'index' %}g/{{post.topic}}/{{post.id}}/edit"><i class="my-auto far fa-edit"></i></a>
-                                            <a data-toggle="modal" data-target="#modal" class="text-white" href="{% url 'index' %}g/{{post.topic}}/{{post.id}}/delete"><i class="my-auto fa fa-trash" aria-hidden="true"></i></a>
+                                    <div class="grid-item-overlay bottom w-100 pl-4 pr-5 pb-1">
+                                        <div class="w-100">
+                                            Submitted by <a class="graytale-link" href="{% url 'index' %}user/{{post.user}}">{{post.user}}</a> to <a class="graytale-link post-topic" href="{% url 'index' %}g/{{post.topic}}">{{post.topic}}</a>
+                                            <div class="float-right">
+                                                <a class="{% if post_notification %}text-danger{% else %}text-white{% endif %}" href="{% url 'index' %}g/{{post.topic}}/{{post.id}}/"><i class="my-auto fas fa-comments"></i></a>
+                                                {% if post.user == user %}
+                                                <a class="text-white" href="{% url 'index' %}g/{{post.topic}}/{{post.id}}/edit"><i class="my-auto far fa-edit"></i></a>
+                                                <a data-toggle="modal" data-target="#modal" class="text-white" href="{% url 'index' %}g/{{post.topic}}/{{post.id}}/delete"><i class="my-auto fa fa-trash" aria-hidden="true"></i></a>
+                                                {% endif %}
+                                            </div>
                                         </div>
-                                        <div class="col-10">
-                                            <p class="my-auto">Submitted by <a class="graytale-link" href="{% url 'index' %}user/{{post.user}}">{{post.user}}</a> to <a class="graytale-link post-topic" href="{% url 'index' %}g/{{post.topic}}">{{post.topic}}</a></p>
-                                        </div>
-                                        {% else %}
-                                        <p class="m-auto">Submitted by <a class="graytale-link" href="{% url 'index' %}user/{{post.user}}">{{post.user}}</a> to <a class="graytale-link post-topic" href="{% url 'index' %}g/{{post.topic}}">{{post.topic}}</a></p>
-                                        {% endif %}
                                     </div>
                                     <!--<a href="{% url 'index' %}g/{{post.topic}}/{{post.id}}" class="text-secondary">-->
                                     <a href="{{post.url}}" target="_blank" class="text-secondary">
@@ -54,7 +53,7 @@
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="px-4 my-4 gt-post-text">
-                                                {{post.text}}
+                                                {{post.text | linebreaks}}
                                             </div>
                                         </div>
                                     </div>
@@ -64,7 +63,7 @@
                                             <div class="px-4 pb-4">
                                                 Submitted by <a class="graytale-link" href="{% url 'index' %}user/{{post.user}}">{{post.user}}</a> to <a class="graytale-link post-topic" href="{% url 'index' %}g/{{post.topic}}">{{post.topic}}</a>
                                                 <div class="float-right">
-                                                    <a class="text-white" href="{% url 'index' %}g/{{post.topic}}/{{post.id}}/"><i class="fas fa-comments"></i></i></a>
+                                                    <a class="{% if post_notification %}text-danger{% else %}text-white{% endif %}" href="{% url 'index' %}g/{{post.topic}}/{{post.id}}/"><i class="fas fa-comments"></i></i></a>
                                                     {% if post.user == user %}
                                                     <a class="text-white" href="{% url 'index' %}g/{{post.topic}}/{{post.id}}/edit"><i class="my-auto far fa-edit"></i></a>
                                                     <a data-toggle="modal" data-target="#modal" class="text-white" href="{% url 'index' %}g/{{post.topic}}/{{post.id}}/delete"><i class="my-auto fa fa-trash" aria-hidden="true"></i></a>

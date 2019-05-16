@@ -39,7 +39,7 @@ class Post(models.Model):
     # username = models.CharField(max_length=32,default='user')
     url = models.URLField(max_length=250)
     metaimage = models.URLField(max_length=500,blank=True,null=True)
-    text = models.TextField(blank=True,max_length=10000)
+    text = models.TextField(blank=True,max_length=50000)
     title = models.CharField(max_length=64, default='')
 
     user = models.ForeignKey(User,default=0,on_delete=models.CASCADE)

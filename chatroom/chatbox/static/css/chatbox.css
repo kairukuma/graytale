@@ -35,7 +35,7 @@
 
 .chat-log-wrapper {
     overflow-x: hidden !important;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 #chat-log-window {
@@ -86,9 +86,15 @@
 }
 
 #chat-log-div {
-    min-height: 100%;
+    height: 95%;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 #chat-log-div .chat-line:nth-child(even) {
     background-color: rgb(75,75,75)
+}
+
+.chat-input-wrapper {
+    height: 5%;
 }

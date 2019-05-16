@@ -19,13 +19,32 @@
             <div class="row">
                 <div class="posts col-8">
                     <div id="posts-window" class="row post-wrapper">
-                        <div class="col-md-12 px-4 pt-4 post-header">
-                            <h5><a href="{{post.url}}">{{post.title}}</a></h5>
-                            <p>Submitted by {{post.user}}</p>
+                        <div class="col-1"></div>
+                        <div class="col-10 mh-100">
+                            <div id="post-header" class="row h-25">
+                                <div class="col-12">
+                                    <h5><a target="_blank" class="graytale-link display-5" href="{{post.url}}">{{post.title}}</a></h5>
+                                    <p class="ml-5">Submitted by <a class="graytale-link" href="{% url 'index' %}user/{{post.user}}/">{{post.user}}</a></p>
+                                </div>
+                            </div>
+                            <div id="post-content" class="row h-50 py-4">
+                                <div id="post-content-wrapper" class="col-md-12 px-5 mh-100">
+                                    {{post.text | linebreaks}}
+                                </div>
+                            </div>
+                            <div class="row h-25 py-4">
+                                <div class="col-md-10"></div>
+                                <div class="col-md-1">
+                                    <a class="graytale-link" href="{% url 'index' %}g/{{post.topic}}/{{post.id}}/edit/">Edit</a>
+                                </div>
+                                <div class="col-md-1">
+                                    <a class="graytale-link" href="{% url 'index' %}g/{{post.topic}}/{{post.id}}/delete/" data-toggle="modal" data-target="#modal">
+                                        Delete
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-12 posts-text pre-scrollable h-100 px-5 py-3">
-                            {{post.text}}
-                        </div>
+                        <div class="col-1"></div>
                     </div>
                 </div>
                 <div class="col-4 p-0" id="chat-log">

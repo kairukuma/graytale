@@ -86,7 +86,7 @@ def get_topics(request):
     for topic in Topic.objects.all():
         notified = False
 
-        if Notification.objects.filter(topic=topic,users__in=[request.user]).exists():
+        if request.user.is_authenticated and Notification.objects.filter(topic=topic,users__in=[request.user]).exists():
             notified = True
 
         topics[topic.name] = {
@@ -97,6 +97,10 @@ def get_topics(request):
     return topics
 
 def clear_notification(request, room_name, post_id):
+
+    if not request.user.is_authenticated:
+        return 
+
     notification = None
 
     currentTopic = Topic.objects.get(name=room_name)
@@ -145,6 +149,19 @@ def room(request, room_name='graytale'):
         else:
             return False
 
+    post_notifications = []
+
+    for post in posts:
+        if room_name == 'graytale':
+            post_notification = Notification.objects.filter(post=post,users__in=[request.user]).exists()
+        else: 
+            post_notification = Notification.objects.filter(topic=topic,post=post,users__in=[request.user]).exists()
+
+        post_notification = request.user.is_authenticated and post_notification
+        post_notifications.append(post_notification)
+
+    print(post_notifications)
+
     # If request method get
     return render(request,'chat/room.html', {
         'room_name': mark_safe(room_name),
@@ -154,7 +171,7 @@ def room(request, room_name='graytale'):
         'subscriptions' : subscriptions,
         'subscribable': True,
         'topics' : get_topics(request),
-        'posts': posts,
+        'posts': zip(post_notifications, posts),
     })
 
 def post_view(request, room_name='graytale', post_id='0'):
