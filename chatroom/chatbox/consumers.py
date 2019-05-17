@@ -73,7 +73,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             user=self.user,
             topic=topic,
             post_id = self.post,
-            datetime=time.mktime(dt.timetuple()),
+            datetime=int(time.mktime(dt.timetuple()) * 1e3 + dt.microsecond // 1e3),
         )
         m.save()
 
@@ -84,7 +84,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         n.actor = self.user
         
-        n.datetime = time.mktime(dt.timetuple())
+        n.datetime = int(time.mktime(dt.timetuple()) * 1e3 + dt.microsecond // 1e3)
         n.text = message
         n.users.set(User.objects.all())
         n.save()

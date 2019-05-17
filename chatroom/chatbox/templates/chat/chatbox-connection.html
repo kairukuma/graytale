@@ -32,7 +32,7 @@
     }
 
     function scrollBottom() {
-        var objDiv = document.getElementById("chat-log-window");
+        var objDiv = document.getElementById("chat-log-div");
         objDiv.scrollTop = objDiv.scrollHeight;
     }
 
@@ -86,6 +86,10 @@
                 var topic = notification.topic
                 $('#notification-badge-' + topic).removeClass('hidden');
             }
+
+            var comment_button = $('#post-'+notification.post).find('.post-comment-button');
+            comment_button.removeClass('text-white');
+            comment_button.addClass('text-danger');
         });
     }
 

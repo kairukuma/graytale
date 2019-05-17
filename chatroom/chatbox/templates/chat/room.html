@@ -19,7 +19,7 @@
                     <div class="posts col-md-8">
                         <div id="posts-window" class="grid invisible">
                             {% for post_notification,post in posts %}
-                            <div class="grid-item {% if post.metaimage %}image-post{% else %}text-post{% endif %}">
+                            <div id="post-{{post.id}}" class="grid-item {% if post.metaimage %}image-post{% else %}text-post{% endif %}">
                                 <div class="grid-item-content-wrapper m-2">
                                     {% if post.metaimage %} <!-- If image post -->
                                     <div class="grid-item-overlay top w-100">
@@ -29,7 +29,7 @@
                                         <div class="w-100">
                                             Submitted by <a class="graytale-link" href="{% url 'index' %}user/{{post.user}}">{{post.user}}</a> to <a class="graytale-link post-topic" href="{% url 'index' %}g/{{post.topic}}">{{post.topic}}</a>
                                             <div class="float-right">
-                                                <a class="{% if post_notification %}text-danger{% else %}text-white{% endif %}" href="{% url 'index' %}g/{{post.topic}}/{{post.id}}/"><i class="my-auto fas fa-comments"></i></a>
+                                                <a class="post-comment-button {% if post_notification %}text-danger{% else %}text-white{% endif %}" href="{% url 'index' %}g/{{post.topic}}/{{post.id}}/"><i class="my-auto fas fa-comments"></i></a>
                                                 {% if post.user == user %}
                                                 <a class="text-white" href="{% url 'index' %}g/{{post.topic}}/{{post.id}}/edit"><i class="my-auto far fa-edit"></i></a>
                                                 <a data-toggle="modal" data-target="#modal" class="text-white" href="{% url 'index' %}g/{{post.topic}}/{{post.id}}/delete"><i class="my-auto fa fa-trash" aria-hidden="true"></i></a>
@@ -63,7 +63,7 @@
                                             <div class="px-4 pb-4">
                                                 Submitted by <a class="graytale-link" href="{% url 'index' %}user/{{post.user}}">{{post.user}}</a> to <a class="graytale-link post-topic" href="{% url 'index' %}g/{{post.topic}}">{{post.topic}}</a>
                                                 <div class="float-right">
-                                                    <a class="{% if post_notification %}text-danger{% else %}text-white{% endif %}" href="{% url 'index' %}g/{{post.topic}}/{{post.id}}/"><i class="fas fa-comments"></i></i></a>
+                                                    <a class="post-comment-button {% if post_notification %}text-danger{% else %}text-white{% endif %}" href="{% url 'index' %}g/{{post.topic}}/{{post.id}}/"><i class="fas fa-comments"></i></i></a>
                                                     {% if post.user == user %}
                                                     <a class="text-white" href="{% url 'index' %}g/{{post.topic}}/{{post.id}}/edit"><i class="my-auto far fa-edit"></i></a>
                                                     <a data-toggle="modal" data-target="#modal" class="text-white" href="{% url 'index' %}g/{{post.topic}}/{{post.id}}/delete"><i class="my-auto fa fa-trash" aria-hidden="true"></i></a>

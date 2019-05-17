@@ -151,14 +151,17 @@ def room(request, room_name='graytale'):
 
     post_notifications = []
 
-    for post in posts:
-        if room_name == 'graytale':
-            post_notification = Notification.objects.filter(post=post,users__in=[request.user]).exists()
-        else: 
-            post_notification = Notification.objects.filter(topic=topic,post=post,users__in=[request.user]).exists()
 
-        post_notification = request.user.is_authenticated and post_notification
-        post_notifications.append(post_notification)
+    for post in posts:
+        if request.user.is_authenticated:
+            if room_name == 'graytale':
+                post_notification = Notification.objects.filter(post=post,users__in=[request.user]).exists()
+            else: 
+                post_notification = Notification.objects.filter(topic=topic,post=post,users__in=[request.user]).exists()
+    
+            post_notifications.append(post_notification)
+        else:
+            post_notifications.append(False)
 
     print(post_notifications)
 
@@ -320,7 +323,7 @@ def create(request):
                 title = request.POST['title'],
                 metaimage = metaimage,
                 topic = Topic.objects.get(name=request.POST['topic']),
-                datetime = time.mktime(dt.timetuple()),
+                datetime = int(time.mktime(dt.timetuple()) * 1e3 + dt._microsecond // 1e3),
                 user = request.user,
             )
 
@@ -353,7 +356,7 @@ def notifications(request):
                 notification = Notification.objects.filter(topic=Topic.objects.get(name=topic_name),post=Post.objects.get(id=post_id),users__in=[request.user])
             else:
                 notification = Notification.objects.filter(topic=Topic.objects.get(name=topic_name),post=None,users__in=[request.user])
-            
+
             if not notification.exists():
                 return JsonResponse(status=200,data={'notifications': []})
 
