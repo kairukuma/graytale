@@ -20,12 +20,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'g409%6v1*kd1^p^i*e0j%q6=kbu^%e)7%bldu29q_&a=)zlvg_'
+SECRET_KEY = os.environ['GRAYTALE_SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['3cc5cdb5.ngrok.io','localhost','127.0.0.1']
+ALLOWED_HOSTS = ['graytale-django.p3tpezp8hg.us-east-1.elasticbeanstalk.com','3cc5cdb5.ngrok.io','localhost','127.0.0.1']
 
 
 # Application definition
@@ -148,10 +148,4 @@ CHANNEL_LAYERS = {
             'hosts': [('127.0.0.1',6379)]
         }
     }
-}
-
-WEBPUSH_SETTINGS = {
-    "VAPID_PUBLIC_KEY": "BEY5FCAORCTlyixz5haeVLePmwFsRPxe5BngO4Fs2vNsb2zQPQP5CABvxQ8n648qRRj3BOFd97Ae3t_897lixiY",
-    "VAPID_PRIVATE_KEY":"ld3cKo1vPr501T53RBPQW-O5PsyQODahrgTMxXxwFCQ",
-    "VAPID_ADMIN_EMAIL": "kylexiong1993@gmail.com"
 }

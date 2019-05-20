@@ -6,7 +6,7 @@ register = template.Library()
 def print_timestamp(timestamp):
     try:
         #assume, that timestamp is given in seconds with decimal point
-        ts = float(timestamp)
+        ts = float(timestamp) // 1000
     except ValueError:
         return None
     return datetime.datetime.fromtimestamp(ts)

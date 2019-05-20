@@ -163,8 +163,6 @@ def room(request, room_name='graytale'):
         else:
             post_notifications.append(False)
 
-    print(post_notifications)
-
     # If request method get
     return render(request,'chat/room.html', {
         'room_name': mark_safe(room_name),

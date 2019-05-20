@@ -1,64 +1,100 @@
-html, body {
-    height: 100%;
+.chat-line {
+    width: auto;
+    padding: 10px 8px 10px 8px;
 }
 
-.chat-line {
-    border: 1px solid rgba(120,120,120,0.66);
-    border-radius: 4px;
-    width: auto;
+.chat-line a {
+    color: rgb(140,180,240) !important;
+    text-decoration: none;
+    transition: text-shadow 0.2s linear;
+}
 
-    margin: 8px 0 8px 16px;
-    padding: 8px;
+.chat-line a:hover {
+    color: rgb(140,180,240);
+    text-decoration: none !important;
+    text-shadow: 0 0 0.05em rgb(165,200,245), 0 0 0.025em rgb(165,200,245);
+    transition: text-shadow 0.1s linear;
+}
+
+.profile-icon {
+    max-height: 24px;
+    width: 24px;
+    text-align:center;
 }
 
 .gt-body {
     height: 100%;
 }
 
+.posts-text {
+    max-height: 70vh !important;
+    height: 70vh !important;
+}
+
+/* Chat box CSS */
+
 .chat-log-wrapper {
-    min-height: 90vh;
     overflow-x: hidden !important;
+    overflow-y: auto;
+}
+
+#chat-log-window {
+    height: 94.5vh;
+    padding-bottom: 12px;
 }
 
 .chat-input-wrapper {
     padding: 1vh 2vw 0 2vw;
-    min-height: 10vh;
+    /* min-height: 10vh; */
+}
+
+.profile-link:hover {
+    text-decoration: none;
+}
+
+.msg-text {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+}
+
+.subbed {
+    background-color: rgb(200,200,200);
+    color: rgb(80,80,80);
+    border-color: rgba(255,255,255,0);
+}
+
+.subbed:hover {
+    background-color: rgb(150,150,150);
+    color: rgb(80,80,80);
+    border-color: rgba(255,255,255,0);
+}
+
+.subbed:active {
+    background-color: rgb(175,175,175) !important;
+    color: rgb(80,80,80);
+    box-shadow: 0 0 0 0.2rem rgba(222,222,222,.5) !important;
+}
+
+.subbed:focus {
+    background-color: rgb(200,200,200);
+    box-shadow: 0 0 0 0.2rem rgba(222,222,222,.5);
+}
+
+.subbed:mousedown {
+    background-color: rgb(175,175,175);
 }
 
 #chat-log-div {
-    min-height: 100%;
-}
-/*
-#chat-message-input {
-    position:relative;
-    top:0px;
-    height: 4vh;
-    width: 90%;
+    height: 95%;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
-#chat-message-submit {
-    height: 5vh;
-    width: 10%;
-}*/
-
-/* Scrollbar */
-/* width */
-::-webkit-scrollbar {
-    width: 10px;
-}
-  
-/* Track */
-::-webkit-scrollbar-track {
-    background: #f1f1f1; 
+#chat-log-div .chat-line:nth-child(even) {
+    background-color: rgb(75,75,75)
 }
 
-/* Handle */
-::-webkit-scrollbar-thumb {
-    border-radius: 8px;
-    background: #888; 
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-    background: #555; 
+.chat-input-wrapper {
+    height: 5%;
 }

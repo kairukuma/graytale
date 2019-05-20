@@ -60,10 +60,17 @@
 
                                     <div class="row">
                                         <div class="col-12">
-                                            <div class="px-4 pb-4">
+                                            <div class="px-4 pb-2">
                                                 Submitted by <a class="graytale-link" href="{% url 'index' %}user/{{post.user}}">{{post.user}}</a> to <a class="graytale-link post-topic" href="{% url 'index' %}g/{{post.topic}}">{{post.topic}}</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="px-4 pb-4">
+                                                <a class="post-comment-button {% if post_notification %}text-danger{% else %}text-white{% endif %}" href="{% url 'index' %}g/{{post.topic}}/{{post.id}}/"><i class="fas fa-comments"></i></i></a>
+                                                <span class="post-comment-count ml-2">1</span>
                                                 <div class="float-right">
-                                                    <a class="post-comment-button {% if post_notification %}text-danger{% else %}text-white{% endif %}" href="{% url 'index' %}g/{{post.topic}}/{{post.id}}/"><i class="fas fa-comments"></i></i></a>
                                                     {% if post.user == user %}
                                                     <a class="text-white" href="{% url 'index' %}g/{{post.topic}}/{{post.id}}/edit"><i class="my-auto far fa-edit"></i></a>
                                                     <a data-toggle="modal" data-target="#modal" class="text-white" href="{% url 'index' %}g/{{post.topic}}/{{post.id}}/delete"><i class="my-auto fa fa-trash" aria-hidden="true"></i></a>
