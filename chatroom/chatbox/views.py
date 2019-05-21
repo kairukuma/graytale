@@ -36,7 +36,7 @@ class GrayTaleUserCreationForm(UserCreationForm):
         fields = ("username", "email", "password1", "password2")
 
     def save(self, commit=True):
-        user = super(UserCreationForm, self).save(commit=False)
+        user = super(GrayTaleUserCreationForm, self).save(commit=False)
         user.email = self.cleaned_data["email"]
 
         if commit:
@@ -122,7 +122,7 @@ def room(request, room_name='graytale'):
     subscriptions, topic, messages = room_data(request, room_name, None)
 
     if topic is None:
-        raise Http404("Page does not exist")
+        raise Http404("Page %s does not exist" % room_name)
 
     if room_name == 'graytale':
         posts = Post.objects.order_by('-datetime')[:10]
@@ -321,7 +321,7 @@ def create(request):
                 title = request.POST['title'],
                 metaimage = metaimage,
                 topic = Topic.objects.get(name=request.POST['topic']),
-                datetime = int(time.mktime(dt.timetuple()) * 1e3 + dt._microsecond // 1e3),
+                datetime = int(time.mktime(dt.timetuple()) * 1e3 + dt.microsecond // 1e3),
                 user = request.user,
             )
 

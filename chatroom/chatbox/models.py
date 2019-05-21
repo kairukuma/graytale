@@ -45,7 +45,7 @@ class Post(models.Model):
     user = models.ForeignKey(User,default=0,on_delete=models.CASCADE)
     topic = models.ForeignKey(Topic,on_delete=models.CASCADE)
 
-    datetime = models.IntegerField(default=0)
+    datetime = models.BigIntegerField(default=0)
 
     def __str__(self):
         return self.title
@@ -60,7 +60,7 @@ class Message(models.Model):
     topic = models.ForeignKey(Topic,default=0,on_delete=models.CASCADE)
     post_id = models.ForeignKey(Post, null=True, blank=True, on_delete=models.CASCADE)
 
-    datetime = models.IntegerField(default=0)
+    datetime = models.BigIntegerField(default=0)
 
     def __str__(self):
         return self.message_text
@@ -72,7 +72,7 @@ class Notification(models.Model):
     post = models.ForeignKey(Post, blank=True, null=True, on_delete=models.CASCADE)
     users = models.ManyToManyField(User, related_name='notification_users')
     text = models.CharField(max_length=80, default='')
-    datetime = models.IntegerField(default=0)
+    datetime = models.BigIntegerField(default=0)
 
     def __str__(self):
         return '%s-%d' % (self.topic,self.post.id) if self.post else self.topic.name
