@@ -20,12 +20,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ['GRAYTALE_SECRET_KEY']
+SECRET_KEY = os.environ.get('GRAYTALE_SECRET_KEY','g409%6v1*kd1^p^i*e0j%q6=kbu^%e)7%bldu29q_&a=)zlvg_')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['graytale-django.p3tpezp8hg.us-east-1.elasticbeanstalk.com','3cc5cdb5.ngrok.io','localhost','127.0.0.1']
+ALLOWED_HOSTS = ['graytale.us-east-1.elasticbeanstalk.com','172.31.29.246','3cc5cdb5.ngrok.io','localhost','127.0.0.1']
 
 
 # Application definition
@@ -149,7 +149,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('127.0.0.1',6379)]
+            'hosts': [('localhost',6379)]
         }
     }
 }
