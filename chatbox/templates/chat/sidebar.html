@@ -1,0 +1,19 @@
+{% load generaltags %}
+
+<div class="sidebar">
+    <div class="container">
+        <!--<div class="row sub-icon-wrapper">
+            <div class="sub-icon m-auto display-4">
+                <a href="{% url 'index' %}">Gr</a>
+            </div>
+        </div>-->
+        {% for topic, topic_data in topics.items %}
+        <div class="row sub-icon-wrapper" id="icon-{{topic.name}}">
+            <div class="sub-icon m-auto display-4">
+                <a href="{% url 'index' %}g/{{topic}}">{{ topic_data | subhead }}{{ topic_data | subneck }}</a>
+            </div>
+            <div class="notification-badge {{topic_data | notified}}" id="notification-badge-{{topic}}"></div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
